@@ -2,11 +2,11 @@ name: Core
 
 on:
   push:
-    paths: 
-     - '!Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android'
+    paths-ignore:
+    - 'Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/**'
   pull_request:
     paths: 
-     - '!Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android'
+    - 'Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/**'
      
   workflow_dispatch:
     inputs:
