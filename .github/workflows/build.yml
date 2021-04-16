@@ -40,6 +40,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
+          cd Xamarin.TravelCostsReport
           dotnet sonarscanner begin /k:"zanuccod_Xamarin.TravelCostsReport" /o:"zanuccod" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build Xamarin.TravelCostsReport.sln --no-restore
           dotnet test Xamarin.TravelCostsReport.sln --no-build --verbosity normal
