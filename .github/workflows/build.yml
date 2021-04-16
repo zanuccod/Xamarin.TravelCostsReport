@@ -27,7 +27,9 @@ jobs:
         dotnet-version: 5.0.x
     
     - name: Restore dependencies
-      run: dotnet restore Xamarin.TravelCostsReport.sln
+      run: |
+        cd Xamarin.TravelCostsReport
+        dotnet restore Xamarin.TravelCostsReport.sln
     
     - name: Cache SonarCloud packages
       uses: actions/cache@v1
