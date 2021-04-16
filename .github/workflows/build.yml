@@ -54,7 +54,7 @@ jobs:
       
     - name: Android
       run: |
-        echo pwd
+        pwd
         cd Xamarin.TravelCostsReport/Mobile
         nuget restore
         cd TravelingCostsReport.Android 
