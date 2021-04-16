@@ -29,5 +29,5 @@ jobs:
         ls
         cd Xamarin.TravelCostsReport
         nuget restore
-        msbuild Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
+        msbuild Mobile/TravelingCostsReport.Android/TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
 
