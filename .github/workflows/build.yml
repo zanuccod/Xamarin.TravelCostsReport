@@ -45,4 +45,9 @@ jobs:
           dotnet build Xamarin.TravelCostsReport/Core/Core --no-restore
           dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport --no-restore
 
+          cd Xamarin.TravelCostsReport/Mobile
+          nuget restore
+          cd TravelingCostsReport.Android 
+          msbuild TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
+
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
