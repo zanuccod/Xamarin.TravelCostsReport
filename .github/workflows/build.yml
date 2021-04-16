@@ -44,10 +44,18 @@ jobs:
           dotnet build Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic --no-restore
           dotnet build Xamarin.TravelCostsReport/Core/Core --no-restore
           dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport --no-restore
-
-          cd Xamarin.TravelCostsReport/Mobile
-          nuget restore
-          cd TravelingCostsReport.Android 
-          msbuild TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
-
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+
+  Android:
+
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Android
+      run: |
+        cd Xamarin.TravelCostsReport/Xamarin.TravelCostsReport/Mobile
+        nuget restore
+        cd TravelingCostsReport.Android 
+        msbuild TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
+
