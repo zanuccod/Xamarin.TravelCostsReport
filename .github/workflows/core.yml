@@ -4,9 +4,6 @@ on:
   push:
     paths-ignore:
     - 'Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/**'
-  pull_request:
-    paths: 
-    - 'Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/**'
      
   workflow_dispatch:
     inputs:
