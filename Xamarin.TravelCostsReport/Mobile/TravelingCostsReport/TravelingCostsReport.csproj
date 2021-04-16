@@ -15,6 +15,6 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BusinnesLogic\BusinnesLogic\BusinnesLogic.csproj" />
+    <ProjectReference Include="..\..\Core\Core\Core.csproj" />
   </ItemGroup>
 </Project>

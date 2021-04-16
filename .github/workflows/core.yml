@@ -35,16 +35,24 @@ jobs:
           cd Xamarin.TravelCostsReport
           dotnet restore Xamarin.TravelCostsReport.sln
           
-      - name: Build and Analyze
+      - name: Build, Analyze and Tests 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-            dotnet sonarscanner begin /k:"zanuccod_Xamarin.TravelCostsReport" /o:"zanuccod" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-            dotnet build Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic --no-restore
-            dotnet build Xamarin.TravelCostsReport/Core/Core --no-restore
-            dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport --no-restore
+            dotnet sonarscanner begin /k:"zanuccod_Xamarin.TravelCostsReport" /o:"zanuccod" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="./TestResults/TestResult.xml"
+            
+            dotnet build Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic -c Release --no-restore
+            dotnet build Xamarin.TravelCostsReport/Core/Core -c Release --no-restore
+            dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport -c Release --no-restore
+            
+            dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=../../../TestResults/TestResult.json
+            dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
+            
+            dotnet test -c Release Xamarin.TravelCostsReport/Core/Core.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
+            dotnet test -c Release Xamarin.TravelCostsReport/Core/Core.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
+            
+            dotnet test -c Release Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
+            dotnet test -c Release Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../../TestResults/TestResult.xml /p:MergeWith=../../../TestResults/TestResult.json
+            
             dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-      - name: Test and Coverage
-        run: 
-          echo test and coverage
