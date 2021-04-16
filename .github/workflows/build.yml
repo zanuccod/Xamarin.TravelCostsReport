@@ -43,8 +43,8 @@ jobs:
           dotnet sonarscanner begin /k:"zanuccod_Xamarin.TravelCostsReport" /o:"zanuccod" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic --no-restore
           dotnet build Xamarin.TravelCostsReport/Core/Core --no-restore
-          dotnet build Mobile/TravelingCostsReport --no-restore
+          dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport --no-restore
 
-          msbuild Mobile/TravelingCostsReport.Android/TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
+          msbuild Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
 
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
