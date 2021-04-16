@@ -27,7 +27,7 @@ jobs:
         dotnet-version: 5.0.x
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore Xamarin.TravelCostsReport.sln
     
     - name: Cache SonarCloud packages
       uses: actions/cache@v1
@@ -56,6 +56,6 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"zanuccod_Xamarin.TravelCostsReport" /o:"zanuccod" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build --no-restore
-          dotnet test --no-build --verbosity normal
+          dotnet build Xamarin.TravelCostsReport.sln --no-restore
+          dotnet test Xamarin.TravelCostsReport.sln --no-build --verbosity normal
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
