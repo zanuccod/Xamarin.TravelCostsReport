@@ -39,6 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          COVERLET_OUPUT: "../../../TestResults/TestResult.json"
         run: |
             dotnet sonarscanner begin /k:"zanuccod_Xamarin.TravelCostsReport" /o:"zanuccod" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="TestResults/TestResult.xml"
             
@@ -46,14 +47,14 @@ jobs:
             dotnet build Xamarin.TravelCostsReport/Core/Core -c Release --no-restore
             dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport -c Release --no-restore
             
-            dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=../../../TestResults/TestResult.json
-            dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
+            dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT}
+            dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT} /p:MergeWith=${COVERLET_OUPUT}
             
-            dotnet test -c Release Xamarin.TravelCostsReport/Core/Core.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
-            dotnet test -c Release Xamarin.TravelCostsReport/Core/Core.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
+            dotnet test -c Release Xamarin.TravelCostsReport/Core/Core.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT} /p:MergeWith=${COVERLET_OUPUT}
+            dotnet test -c Release Xamarin.TravelCostsReport/Core/Core.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT} /p:MergeWith=${COVERLET_OUPUT}
             
-            dotnet test -c Release Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:MergeWith=../../../TestResults/TestResult.json
-            dotnet test -c Release Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../../TestResults/TestResult.xml /p:MergeWith=../../../TestResults/TestResult.json
+            dotnet test -c Release Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT} /p:MergeWith=${COVERLET_OUPUT}
+            dotnet test -c Release Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=../../../TestResults/TestResult.xml /p:MergeWith=${COVERLET_OUPUT}
             pwd
             ls
             dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
