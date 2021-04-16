@@ -25,9 +25,5 @@ jobs:
       
     - name: Android
       run: |
-        pwd
-        cd Xamarin.TravelCostsReport/Mobile   
-        nuget restore
-        cd TravelingCostsReport.Android 
-        msbuild TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
+        msbuild Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/TravelingCostsReport.Android.csproj /t:Rebuild /p:Configuration=Release
 
