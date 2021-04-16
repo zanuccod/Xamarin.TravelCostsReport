@@ -24,7 +24,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          fetch-depth: 0
+        fetch-depth: "0"
           dotnet-version: 5.0.x
 
       - name: Install SonarCloud scanner
