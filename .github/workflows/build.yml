@@ -29,6 +29,7 @@ jobs:
       - name: Install SonarCloud scanner
         run: |
           dotnet tool install --global dotnet-sonarscanner
+          
       - name: Restore dependencies
         run: |
           cd Xamarin.TravelCostsReport
@@ -53,6 +54,16 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Install SonarCloud scanner
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+
     - name: Android
       run: |
         cd Xamarin.TravelCostsReport
