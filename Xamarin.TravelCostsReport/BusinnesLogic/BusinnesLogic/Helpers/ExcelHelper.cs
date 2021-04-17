@@ -1,0 +1,66 @@
+﻿using BusinnesLogic.Models;
+using GemBox.Spreadsheet;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+
+namespace BusinnesLogic.Helpers
+{
+    public class ExcelHelper
+    {
+        static void Main()
+        {
+        }
+
+        private static int cityItemNamesRow = 1;
+        public static IEnumerable<City> ReadExcel(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                throw new Exception("The file path given was empty.");
+            }
+
+            if (!File.Exists(filePath))
+            {
+                throw new Exception("The file do not exists.");
+            }
+
+            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+            var workbook = ExcelFile.Load(filePath);
+            var worksheet = workbook.Worksheets["Sheet1"];
+
+            var result = new List<City>();
+            for (var rowIdx = 0; rowIdx <= worksheet.Rows.Count; rowIdx++)
+            {
+                //city name always on first column (column A)
+                var cityNameCell = worksheet.Cells[rowIdx, 0];
+                if (cityNameCell.ValueType != CellValueType.Null)
+                {
+                    var city = new City();
+                    city.Name = cityNameCell.Value.ToString();
+                    var cityItems = new List<CityItem>();
+
+                    for (var colIdx = 0; colIdx <= worksheet.Columns.Count; colIdx++)
+                    {
+                        var cityItemName = worksheet.Cells[cityItemNamesRow, colIdx];
+                        if (cityItemName.ValueType != CellValueType.Null)
+                        {
+                            cityItems.Add(new CityItem()
+                            {
+                                Name = cityItemName.Value.ToString(),
+                                Distance = Convert.ToInt32(worksheet.Cells[rowIdx, colIdx].Value)
+                            });
+                        }
+                    }
+                    city.CityItems = cityItems;
+                    result.Add(city);
+                 }
+            }    
+
+            return result;
+        }
+    }
+}

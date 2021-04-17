@@ -26,4 +26,13 @@
   <ItemGroup>
     <ProjectReference Include="..\BusinnesLogic\BusinnesLogic.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestFiles\travelReportOff.ods">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestFiles\travelReportTest.ods">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
