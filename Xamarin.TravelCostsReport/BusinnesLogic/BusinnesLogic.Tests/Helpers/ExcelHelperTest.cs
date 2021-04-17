@@ -27,7 +27,7 @@ namespace BusinnesLogic.Tests.Helpers
         public void ReadExcel_FileGiven_ShouldReturnListOfCities(string filePath)
         {
             //Arrange
-            var fileName = $"TestFiles\\{filePath}";
+            var fileName = $"TestFiles/{filePath}";
             var expectedResult = new List<City>()
             {
                 new City()
