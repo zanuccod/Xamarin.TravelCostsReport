@@ -1,4 +1,5 @@
-﻿using BusinnesLogic.Repository;
+﻿using BusinnesLogic.Models;
+using BusinnesLogic.Repository;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Extensions
@@ -7,7 +8,7 @@ namespace Core.Extensions
     {
         public static IServiceCollection ConfigureRepository(this IServiceCollection services)
         {
-            services.AddTransient<ITestRepository, TestRepository>();
+            services.AddTransient<IDataStore<City>, LiteDbCityDataStore>();
 
             return services;
         }

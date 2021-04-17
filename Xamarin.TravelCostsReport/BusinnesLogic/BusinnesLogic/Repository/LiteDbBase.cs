@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using LiteDB;
+using Serilog;
 
 namespace BusinnesLogic.Repository
 {
@@ -11,7 +12,13 @@ namespace BusinnesLogic.Repository
 
         protected LiteDbBase(string dbPath)
         {
-            db = new LiteDatabase(dbPath ?? GetDatabasePath());
+            var databaseFullPath = dbPath ?? GetDatabasePath();
+
+            Log.Debug("<{Method}> database located in <{databasePath}>",
+                System.Reflection.MethodBase.GetCurrentMethod().ReflectedType.Name,
+                databaseFullPath);
+
+            db = new LiteDatabase(databaseFullPath);
         }
 
         #region Public Methods

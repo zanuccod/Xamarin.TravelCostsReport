@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LiteDB;
 
 namespace BusinnesLogic.Repository
 {
     public interface IDataStore<T>
     {
-        Task InsertAsync(T item);
-        Task InsertItemsAsync(IEnumerable<T> items);
-        Task UpdateAsync(T item);
-        Task DeleteAsync(T item);
+        Task<BsonValue> InsertAsync(T item);
+        Task<int> InsertItemsAsync(IEnumerable<T> items);
+        Task<bool> UpdateAsync(T item);
+        Task<bool> DeleteAsync(T item);
         Task<T> FindAsync(T item);
         Task<IEnumerable<T>> FindAllAsync();
-        Task DeleteAllAsync();
+        Task<int> DeleteAllAsync();
     }
 }
