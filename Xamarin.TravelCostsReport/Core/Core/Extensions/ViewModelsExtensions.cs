@@ -8,7 +8,7 @@ namespace Core.Extensions
     {
         public static IServiceCollection ConfigureViewModels(this IServiceCollection services)
         {
-            services.AddTransient<IViewTest, ViewTestPresenter>();
+            //services.AddTransient<IViewTest, ViewTestPresenter>();
 
             return services;
         }
