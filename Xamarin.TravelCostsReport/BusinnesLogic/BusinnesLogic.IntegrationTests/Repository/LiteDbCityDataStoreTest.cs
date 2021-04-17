@@ -9,14 +9,14 @@ using Xunit;
 
 namespace BusinnesLogic.IntegrationTests.Repository
 {
-    public class LiteDbTravelReportDataStoreTest : IDisposable
+    public class LiteDbCityDataStoreTest : IDisposable
     {
-        private LiteDbTravelReportDataStore dataStore;
+        private LiteDbCityDataStore dataStore;
         private const string dbName = "testDataStore";
 
-        public LiteDbTravelReportDataStoreTest()
+        public LiteDbCityDataStoreTest()
         {
-            dataStore = new LiteDbTravelReportDataStore(dbName);
+            dataStore = new LiteDbCityDataStore(dbName);
         }
         
         [Fact]

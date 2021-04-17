@@ -5,8 +5,9 @@ using BusinnesLogic.Models;
 
 namespace BusinnesLogic.Services
 {
-    public interface ITravelReportService
+    public interface ICityService
     {
         public Task<IEnumerable<City>> FindAll();
+        public Task InsertCities(IEnumerable<City> items);
     }
 }
