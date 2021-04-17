@@ -1,6 +1,10 @@
 ﻿using System;
+using BusinnesLogic.Repository;
+using BusinnesLogic.Services;
+using Core.Presenters;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+
 
 namespace TravelingCostsReport
 {
@@ -9,6 +13,8 @@ namespace TravelingCostsReport
         public App()
         {
             InitializeComponent();
+
+            Core.Startup.Init();
 
             MainPage = new MainPage();
         }
