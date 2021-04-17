@@ -12,7 +12,7 @@ namespace BusinnesLogic.Services
         Task<int> InsertItemsAsync(IEnumerable<City> items);
         Task<bool> UpdateAsync(City item);
         Task<bool> DeleteAsync(City item);
-        Task<City> FindAsync(City item);
+        Task<City> FindByIdAsync(int id);
         Task<IEnumerable<City>> FindAllAsync();
         Task<int> DeleteAllAsync();
     }

@@ -28,7 +28,7 @@ namespace BusinnesLogic.Services
         {
             if (item == null)
             {
-                throw new Exception("unable to delete the given item because is null");
+                throw new ArgumentNullException("unable to delete the given item because is null");
             }
             return cityRepository.DeleteAsync(item);
         }
@@ -38,29 +38,20 @@ namespace BusinnesLogic.Services
             return cityRepository.FindAllAsync();
         }
 
-        public Task<City> FindAsync(City item)
+        public Task<City> FindByIdAsync(int id)
         {
-            if (item == null)
+            if (id < 1)
             {
-                throw new Exception("unable to find the given item because is null");
+                throw new ArgumentException($"unable to find the item because gived id <{id}> is not valid");
             }
-            return cityRepository.FindAsync(item);
+            return cityRepository.FindByIdAsync(id);
         }
 
         public Task<BsonValue> InsertAsync(City item)
         {
             if (item == null)
             {
-                throw new Exception("unable to insert the given item because is null");
-            }
-            return cityRepository.InsertAsync(item);
-        }
-
-        public Task InsertCityAsync(City item)
-        {
-            if (item == null)
-            {
-                throw new Exception("unable to insert the element because is null");
+                throw new ArgumentNullException("unable to insert given element because is null");
             }
 
             Log.Debug("{method} insert item with name <{cityName}>",
@@ -73,7 +64,7 @@ namespace BusinnesLogic.Services
         {
             if (items == null)
             {
-                throw new Exception("unable to insert the given collection because is null");
+                throw new ArgumentNullException("unable to insert the given collection because is null");
             }
 
             Log.Debug("{method} add <{itemCount}> items",
@@ -87,7 +78,7 @@ namespace BusinnesLogic.Services
         {
             if (item == null)
             {
-                throw new Exception("unable to update the element because is null");
+                throw new ArgumentNullException("unable to update the element because is null");
             }
 
             Log.Debug("{method} update item with id <{id}> name <{cityName}>",

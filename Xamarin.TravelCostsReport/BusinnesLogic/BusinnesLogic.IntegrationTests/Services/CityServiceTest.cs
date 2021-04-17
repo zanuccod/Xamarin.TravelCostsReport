@@ -51,7 +51,7 @@ namespace BusinnesLogic.IntegrationTests.Services
         [Fact]
         public async Task InsertAsync_NullElement_ShouldThrowException()
         {
-            await Assert.ThrowsAsync<Exception>(() => service.InsertAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.InsertAsync(null));
         }
 
         [Fact]
@@ -99,7 +99,44 @@ namespace BusinnesLogic.IntegrationTests.Services
         [Fact]
         public async Task InsertItemsAsync_NullElements_ShouldThrowException()
         {
-            await Assert.ThrowsAsync<Exception>(() => service.InsertItemsAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.InsertItemsAsync(null));
+        }
+
+        [Fact]
+        public async Task FindAsync_ElementExist_ShouldReturnTheElement()
+        {
+            // Arrange
+            var item = new City()
+            {
+                Name = "name",
+                CityItems = new List<CityItem>()
+                {
+                    new CityItem()
+                    {
+                        Name = "pippo",
+                        Distance = 10
+                    }
+                }
+            };
+            await service.InsertAsync(item);
+            var insertedItemm = await service.FindAllAsync();
+
+            // Act
+            var result = await service.FindByIdAsync(insertedItemm.First().Id);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(item.Equals(result));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-2)]
+        public async Task FindAsync_InvalidID_ShouldThrowArgumentException(int id)
+        {
+            await Assert.ThrowsAsync<ArgumentException>(() => service.FindByIdAsync(id));
+
         }
 
         [Fact]
@@ -145,7 +182,7 @@ namespace BusinnesLogic.IntegrationTests.Services
         [Fact]
         public async Task UpdateAsync_NullElements_ShouldThrowException()
         {
-            await Assert.ThrowsAsync<Exception>(() => service.UpdateAsync(null));
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.UpdateAsync(null));
         }
 
         [Fact]
@@ -174,6 +211,12 @@ namespace BusinnesLogic.IntegrationTests.Services
             Assert.True(result);
             var updatedElement = await service.FindAllAsync();
             Assert.True(updatedElement.Count() == 0);
+        }
+
+        [Fact]
+        public async Task DeleteAsync_NullElements_ShouldThrowException()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(() => service.DeleteAsync(null));
         }
 
         [Fact]

@@ -11,7 +11,7 @@ namespace BusinnesLogic.Repository
         Task<int> InsertItemsAsync(IEnumerable<T> items);
         Task<bool> UpdateAsync(T item);
         Task<bool> DeleteAsync(T item);
-        Task<T> FindAsync(T item);
+        Task<T> FindByIdAsync(int id);
         Task<IEnumerable<T>> FindAllAsync();
         Task<int> DeleteAllAsync();
     }

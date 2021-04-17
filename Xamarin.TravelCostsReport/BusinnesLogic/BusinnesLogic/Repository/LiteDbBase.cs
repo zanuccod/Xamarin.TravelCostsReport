@@ -9,6 +9,7 @@ namespace BusinnesLogic.Repository
     {
         private const string databaseName = "dbLiteDb.db";
         protected readonly LiteDatabase db;
+        private bool _disposed = false;
 
         protected LiteDbBase(string dbPath)
         {
@@ -23,9 +24,24 @@ namespace BusinnesLogic.Repository
 
         #region Public Methods
 
-        public void Dispose()
+        // Public implementation of Dispose pattern callable by consumers.
+        public void Dispose() => Dispose(true);
+
+        // Protected implementation of Dispose pattern.
+        protected virtual void Dispose(bool disposing)
         {
-            db.Dispose();
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                // Dispose managed state (managed objects).
+                db.Dispose();
+            }
+
+            _disposed = true;
         }
 
         #endregion

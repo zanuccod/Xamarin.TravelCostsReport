@@ -70,9 +70,9 @@ namespace BusinnesLogic.Repository
         /// Find a document using Document Id.
         /// Returns null if not found.
         /// </summary>
-        public Task<City> FindAsync(City item)
+        public Task<City> FindByIdAsync(int id)
         {
-            return Task.FromResult(cities.FindById(item.Id));
+            return Task.FromResult(cities.FindById(id));
         }
 
         /// <summary>
