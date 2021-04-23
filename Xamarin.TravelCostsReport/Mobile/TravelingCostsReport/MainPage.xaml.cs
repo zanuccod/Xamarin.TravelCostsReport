@@ -10,6 +10,7 @@ using Xamarin.Forms.Internals;
 using Core.Presenters;
 using Core;
 using Core.IViews;
+using BusinnesLogic.Models;
 
 namespace TravelingCostsReport
 {
@@ -21,12 +22,12 @@ namespace TravelingCostsReport
         {
             InitializeComponent();
 
-            presenter = new ViewTestPresenter(this, (ITestService)Startup.ServiceProvider.GetService(typeof(ITestService)));
+            presenter = new ViewTestPresenter(this, (ICityService)Startup.ServiceProvider.GetService(typeof(ICityService)));
         }
 
-        public IEnumerable<int> Test()
+        public IEnumerable<City> Test()
         {
-            var test = presenter.GetItems();
+            var test = presenter.GetItems().Result;
             return test;
         }
 

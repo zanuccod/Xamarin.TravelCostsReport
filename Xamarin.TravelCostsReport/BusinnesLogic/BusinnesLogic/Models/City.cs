@@ -7,6 +7,8 @@ namespace BusinnesLogic.Models
 {
     public class City : IEquatable<City>
     {
+        public int Id { get; set; }
+
         public string Name { get; set; }
         public IEnumerable<CityItem> CityItems { get; set; }
 
@@ -36,6 +38,11 @@ namespace BusinnesLogic.Models
             }
 
             return result;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, CityItems);
         }
     }
 }
