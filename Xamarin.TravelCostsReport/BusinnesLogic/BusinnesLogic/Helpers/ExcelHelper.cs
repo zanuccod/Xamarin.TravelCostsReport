@@ -1,21 +1,15 @@
 ﻿using BusinnesLogic.Models;
 using GemBox.Spreadsheet;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace BusinnesLogic.Helpers
 {
     public class ExcelHelper
     {
-        static void Main()
-        {
-        }
+        private static readonly int CITY_ITEM_NAMES_ROW = 1;
 
-        private static int cityItemNamesRow = 1;
         public static IEnumerable<City> ReadExcel(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
@@ -45,7 +39,7 @@ namespace BusinnesLogic.Helpers
 
                     for (var colIdx = 0; colIdx <= worksheet.Columns.Count; colIdx++)
                     {
-                        var cityItemName = worksheet.Cells[cityItemNamesRow, colIdx];
+                        var cityItemName = worksheet.Cells[CITY_ITEM_NAMES_ROW, colIdx];
                         if (cityItemName.ValueType != CellValueType.Null)
                         {
                             cityItems.Add(new CityItem()

@@ -9,11 +9,13 @@
     <Folder Include="Repository\" />
     <Folder Include="Services\" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="LiteDB" Version="5.0.10" />
     <PackageReference Include="GemBox.Spreadsheet" Version="47.0.1129" />
     <PackageReference Include="Serilog" Version="2.10.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="LiteDB" Version="5.0.10" />
   </ItemGroup>
 </Project>

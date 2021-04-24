@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 
 namespace BusinnesLogic.Models
 {
@@ -12,10 +12,17 @@ namespace BusinnesLogic.Models
         public string Name { get; set; }
         public IEnumerable<CityItem> CityItems { get; set; }
 
+        #region Constructor
+
         public City()
         {
             CityItems = Enumerable.Empty<CityItem>();
         }
+
+        #endregion
+
+        #region Overridden Methods
+
         public override bool Equals(object obj)
         {
             if (obj == null || !ReferenceEquals(obj, this))
@@ -24,19 +31,19 @@ namespace BusinnesLogic.Models
             }
             return Equals(obj as City);
         }
-        public bool Equals(City city)
+
+        public bool Equals(City other)
         {
-            var result = true;
-            result &= Name.Equals(city.Name);
-
-            if (CityItems.Count() != city.CityItems.Count())
-                return false;
-
-            for(var idx = 0; idx < CityItems.Count(); idx++)
+            if (other == null || CityItems.Count() != other.CityItems.Count())
             {
-                result &= CityItems.ElementAt(idx).Equals(city.CityItems.ElementAt(idx));
+                return false;
             }
 
+            var result = Name.Equals(other.Name);
+            for (var idx = 0; idx < CityItems.Count(); idx++)
+            {
+                result &= CityItems.ElementAt(idx).Equals(other.CityItems.ElementAt(idx));
+            }
             return result;
         }
 
@@ -44,5 +51,12 @@ namespace BusinnesLogic.Models
         {
             return HashCode.Combine(Name, CityItems);
         }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+        #endregion
     }
 }

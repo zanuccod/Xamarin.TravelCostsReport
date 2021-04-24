@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using BusinnesLogic.Models;
 using LiteDB;
-using Serilog;
 
 namespace BusinnesLogic.Repository
 {
