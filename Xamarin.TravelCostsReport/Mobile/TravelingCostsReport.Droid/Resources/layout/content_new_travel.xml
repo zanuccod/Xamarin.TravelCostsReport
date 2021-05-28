@@ -11,8 +11,8 @@
 	<androidx.recyclerview.widget.RecyclerView
 		android:id="@+id/recyclerView"
 		android:scrollbars="vertical"
+        android:paddingTop="@dimen/small_margin"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
-		app:layoutManager="GridLayoutManager"
-		android:paddingTop="?attr/actionBarSize" />
+		app:layoutManager="GridLayoutManager" />
 </RelativeLayout>

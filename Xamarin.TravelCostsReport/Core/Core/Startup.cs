@@ -13,7 +13,6 @@ namespace Core
         {
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .WriteTo.Console()
                 .CreateLogger();
 
             var serviceProvider =
@@ -26,6 +25,11 @@ namespace Core
             ServiceProvider = serviceProvider;
 
             return serviceProvider;
+        }
+
+        public static T GetService<T>()
+        {
+            return (T)ServiceProvider.GetService(typeof(T));
         }
     }
 }

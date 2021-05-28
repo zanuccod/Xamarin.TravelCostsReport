@@ -1,4 +1,4 @@
-﻿using BusinnesLogic.Models;
+﻿using BusinnesLogic.Dto;
 using GemBox.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace BusinnesLogic.Helpers
     {
         private static readonly int CITY_ITEM_NAMES_ROW = 1;
 
-        public static IEnumerable<City> ReadExcel(string filePath)
+        public static IEnumerable<CityDto> ReadExcel(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -26,23 +26,23 @@ namespace BusinnesLogic.Helpers
             var workbook = ExcelFile.Load(filePath);
             var worksheet = workbook.Worksheets["Sheet1"];
 
-            var result = new List<City>();
+            var result = new List<CityDto>();
             for (var rowIdx = 0; rowIdx <= worksheet.Rows.Count; rowIdx++)
             {
                 //city name always on first column (column A)
                 var cityNameCell = worksheet.Cells[rowIdx, 0];
                 if (cityNameCell.ValueType != CellValueType.Null)
                 {
-                    var city = new City();
+                    var city = new CityDto();
                     city.Name = cityNameCell.Value.ToString();
-                    var cityItems = new List<CityItem>();
+                    var cityItems = new List<CityItemDto>();
 
                     for (var colIdx = 0; colIdx <= worksheet.Columns.Count; colIdx++)
                     {
                         var cityItemName = worksheet.Cells[CITY_ITEM_NAMES_ROW, colIdx];
                         if (cityItemName.ValueType != CellValueType.Null)
                         {
-                            cityItems.Add(new CityItem()
+                            cityItems.Add(new CityItemDto()
                             {
                                 Name = cityItemName.Value.ToString(),
                                 Distance = Convert.ToInt32(worksheet.Cells[rowIdx, colIdx].Value)
