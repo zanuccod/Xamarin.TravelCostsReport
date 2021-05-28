@@ -80,6 +80,14 @@ namespace Core.Presenters
         public void OnResume()
         {
             LoadItemsCommand.Execute(null);
+
+            if (Items.Count() == 0)
+            {
+                ImportDataFromExcel()
+                    .GetAwaiter()
+                    .GetResult();
+                LoadItemsCommand.Execute(null);
+            }
         }
 
         #endregion
@@ -94,20 +102,19 @@ namespace Core.Presenters
             LoadItemsCommand = new Command(async () => await LoadItems());
         }
 
-        private Task LoadItems()
+        private async Task LoadItems()
         {
 
             if (IsBusy)
             {
-                return Task.CompletedTask;
+                return;
             }
 
             IsBusy = true;
 
             try
             {
-                //Items = await cityService.FindAllAsync();
-                Items = ImportDataFromExcel();
+                Items = await cityService.FindAllAsync();
             }
             catch (Exception ex)
             {
@@ -117,10 +124,23 @@ namespace Core.Presenters
             {
                 IsBusy = false;
             }
+        }
+
+        private Task ImportDataFromExcel()
+        {
+            var items = ReadDataFromExcel();
+            if (items.Count() > 0)
+            {
+                cityService.InsertItemsAsync(items);
+            }
+            else
+            {
+                view.ShowErrorMessage("No data to be loaded");
+            }
             return Task.CompletedTask;
         }
 
-        public IEnumerable<CityDto> ImportDataFromExcel()
+        private IEnumerable<CityDto> ReadDataFromExcel()
         {
             var fileName = "travelData.ods";
             var path = Path.Combine(
@@ -131,6 +151,10 @@ namespace Core.Presenters
             if (File.Exists(path))
             {
                 return ExcelHelper.ReadExcel(path);
+            }
+            else
+            {
+                view.ShowErrorMessage("File <travelData.ods> not exists in the Download folder");
             }
             return Enumerable.Empty<CityDto>();
         }
