@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:local="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:foreground="?attr/selectableItemBackground"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/card_margin"
+    android:layout_marginRight="@dimen/card_margin"
+    android:layout_marginBottom="@dimen/card_margin">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/adapter_item_city_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/small_margin"
+            android:paddingLeft="@dimen/small_margin"
+            android:paddingRight="@dimen/small_margin"
+            android:maxLines="1"
+            android:ellipsize="end"
+            style="?android:textAppearanceMedium"
+            android:textSize="@dimen/abc_text_size_large_material"
+            tools:text="Name" />
+        <TextView
+            android:id="@+id/adapter_item_order_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/adapter_item_city_name"
+            android:padding="@dimen/small_margin"
+            android:ellipsize="end"
+            android:maxLines="1"
+            style="?android:textAppearanceSmall"
+            tools:text="OrderList" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
