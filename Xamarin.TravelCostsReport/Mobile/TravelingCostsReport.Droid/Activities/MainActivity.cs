@@ -7,12 +7,17 @@ using AndroidX.AppCompat.Widget;
 using AndroidX.AppCompat.App;
 using Google.Android.Material.FloatingActionButton;
 using Google.Android.Material.Snackbar;
+using AndroidX.DrawerLayout.Widget;
+using Google.Android.Material.Navigation;
 
 namespace TravelingCostsReport.Droid.Activities
 {
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
-    public class MainActivity : AppCompatActivity
+    public class MainActivity : AppCompatActivity, NavigationView.IOnNavigationItemSelectedListener
     {
+        DrawerLayout drawerLayout;
+        NavigationView navigationView;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -24,6 +29,21 @@ namespace TravelingCostsReport.Droid.Activities
 
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
+
+            drawerLayout = FindViewById<DrawerLayout>(Resource.Id.drawer_layout);
+            navigationView = FindViewById<NavigationView>(Resource.Id.nav_view);
+
+            var toggle = new ActionBarDrawerToggle(this,
+                                                   drawerLayout,
+                                                   toolbar,
+                                                   Resource.String.navigation_drawer_open,
+                                                   Resource.String.navigation_drawer_close);
+
+            drawerLayout?.AddDrawerListener(toggle);
+            toggle.SyncState();
+
+            navigationView?.SetNavigationItemSelectedListener(this);
+
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -34,12 +54,12 @@ namespace TravelingCostsReport.Droid.Activities
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
+            switch (item.ItemId)
             {
-                return true;
+                case Android.Resource.Id.Home:
+                    drawerLayout.OpenDrawer(Android.Support.V4.View.GravityCompat.Start);
+                    return true;
             }
-
             return base.OnOptionsItemSelected(item);
         }
 
@@ -55,6 +75,11 @@ namespace TravelingCostsReport.Droid.Activities
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        public bool OnNavigationItemSelected(IMenuItem menuItem)
+        {
+            throw new NotImplementedException();
         }
     }
 }
