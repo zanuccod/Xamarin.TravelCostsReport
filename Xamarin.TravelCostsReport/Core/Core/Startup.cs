@@ -19,6 +19,7 @@ namespace Core
             var serviceProvider =
                 new ServiceCollection()
                     .ConfigureRepository()
+                    .ConfigureAutomapperReferences()
                     .ConfigureServices()
                     .ConfigureViewModels()
                     .BuildServiceProvider();

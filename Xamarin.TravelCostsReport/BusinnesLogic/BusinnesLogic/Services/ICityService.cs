@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BusinnesLogic.Models;
+using BusinnesLogic.Dto;
 using LiteDB;
 
 namespace BusinnesLogic.Services
 {
     public interface ICityService
     {
-        Task<BsonValue> InsertAsync(City item);
-        Task<int> InsertItemsAsync(IEnumerable<City> items);
-        Task<bool> UpdateAsync(City item);
-        Task<bool> DeleteAsync(City item);
-        Task<City> FindByIdAsync(int id);
-        Task<IEnumerable<City>> FindAllAsync();
+        Task<BsonValue> InsertAsync(CityDto item);
+        Task<int> InsertItemsAsync(IEnumerable<CityDto> items);
+        Task<bool> UpdateAsync(CityDto item);
+        Task<bool> DeleteAsync(CityDto item);
+        Task<CityDto> FindByIdAsync(int id);
+        Task<IEnumerable<CityDto>> FindAllAsync();
         Task<int> DeleteAllAsync();
     }
 }

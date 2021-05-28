@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BusinnesLogic.Dto;
+using BusinnesLogic.Mappers;
 using BusinnesLogic.Models;
 using BusinnesLogic.Repository;
 using BusinnesLogic.Services;
@@ -14,25 +17,33 @@ namespace BusinnesLogic.IntegrationTests.Services
     {
         private readonly IDataStore<City> dataStore;
         private readonly ICityService service;
+        private readonly IMapper mapper;
 
         private const string dbName = "testDataStore";
 
         public CityServiceTest()
         {
             dataStore = new LiteDbCityDataStore(dbName);
-            service = new CityService(dataStore);
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new CityProfile());
+            });
+            mapper = config.CreateMapper();
+
+            service = new CityService(dataStore, mapper);
         }
 
         [Fact]
         public async Task InsertAsync_ShouldAddTheElement()
         {
             // Arrange
-            var item = new City()
+            var item = new CityDto()
             {
                 Name = "name",
-                CityItems = new List<CityItem>()
+                CityItems = new List<CityItemDto>()
                 {
-                    new CityItem()
+                    new CityItemDto()
                     {
                         Name = "pippo",
                         Distance = 10
@@ -58,26 +69,26 @@ namespace BusinnesLogic.IntegrationTests.Services
         public async Task InsertItemsAsync_ShouldInsertAllTheElements()
         {
             // Arrange
-            var items = new List<City>()
+            var items = new List<CityDto>()
             {
-                new City()
+                new CityDto()
                 {
                     Name = "name",
-                    CityItems = new List<CityItem>()
+                    CityItems = new List<CityItemDto>()
                     {
-                        new CityItem()
+                        new CityItemDto()
                         {
                             Name = "pippo",
                             Distance = 10
                         }
                     }
                 },
-                new City()
+                new CityDto()
                 {
                     Name = "name-1",
-                    CityItems = new List<CityItem>()
+                    CityItems = new List<CityItemDto>()
                     {
-                        new CityItem()
+                        new CityItemDto()
                         {
                             Name = "pippo_1",
                             Distance = 20
@@ -106,12 +117,12 @@ namespace BusinnesLogic.IntegrationTests.Services
         public async Task FindAsync_ElementExist_ShouldReturnTheElement()
         {
             // Arrange
-            var item = new City()
+            var item = new CityDto()
             {
                 Name = "name",
-                CityItems = new List<CityItem>()
+                CityItems = new List<CityItemDto>()
                 {
-                    new CityItem()
+                    new CityItemDto()
                     {
                         Name = "pippo",
                         Distance = 10
@@ -143,12 +154,12 @@ namespace BusinnesLogic.IntegrationTests.Services
         public async Task UpdateAsync_ExistingElement_ShouldUpdateElementAndReturnTrue()
         {
             // Arrange
-            var item = new City()
+            var item = new CityDto()
             {
                 Name = "name",
-                CityItems = new List<CityItem>()
+                CityItems = new List<CityItemDto>()
                 {
-                    new CityItem()
+                    new CityItemDto()
                     {
                         Name = "pippo",
                         Distance = 10
@@ -173,7 +184,7 @@ namespace BusinnesLogic.IntegrationTests.Services
         public async Task UpdateAsync_ElementNotExist_ShouldDoNothing()
         {
             // Act
-            var result = await service.UpdateAsync(new City() { Id = 1 });
+            var result = await service.UpdateAsync(new CityDto() { Id = 1 });
 
             // Assert
             Assert.False(result);
@@ -189,12 +200,12 @@ namespace BusinnesLogic.IntegrationTests.Services
         public async Task DeleteAsync_ShouldDeleteAnExistingElement()
         {
             // Arrange
-            var item = new City()
+            var item = new CityDto()
             {
                 Name = "name",
-                CityItems = new List<CityItem>()
+                CityItems = new List<CityItemDto>()
                 {
-                    new CityItem()
+                    new CityItemDto()
                     {
                         Name = "pippo",
                         Distance = 10
@@ -223,12 +234,12 @@ namespace BusinnesLogic.IntegrationTests.Services
         public async Task DeleteAllAsync_ShouldDeleteAllTheElements()
         {
             // Arrange
-            var item = new City()
+            var item = new CityDto()
             {
                 Name = "name",
-                CityItems = new List<CityItem>()
+                CityItems = new List<CityItemDto>()
                 {
-                    new CityItem()
+                    new CityItemDto()
                     {
                         Name = "pippo",
                         Distance = 10

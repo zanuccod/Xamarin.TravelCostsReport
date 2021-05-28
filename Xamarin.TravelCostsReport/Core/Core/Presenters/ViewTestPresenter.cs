@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BusinnesLogic.Models;
+using BusinnesLogic.Dto;
 using BusinnesLogic.Services;
 using Core.IViews;
 
@@ -17,7 +17,7 @@ namespace Core.Presenters
             testService = service;
         }
 
-        public Task<IEnumerable<City>> GetItems()
+        public Task<IEnumerable<CityDto>> GetItems()
         {
             return testService.FindAllAsync();
         }

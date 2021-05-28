@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using BusinnesLogic.Dto;
 using BusinnesLogic.Models;
 using BusinnesLogic.Repository;
 using LiteDB;
@@ -12,10 +14,12 @@ namespace BusinnesLogic.Services
     public class CityService : ICityService
     {
         private readonly IDataStore<City> cityRepository;
+        private readonly IMapper mapper;
 
-        public CityService(IDataStore<City> cityRepository)
+        public CityService(IDataStore<City> cityRepository, IMapper mapper)
         {
             this.cityRepository = cityRepository;
+            this.mapper = mapper;
         }
 
         public Task<int> DeleteAllAsync()
@@ -24,30 +28,30 @@ namespace BusinnesLogic.Services
             return cityRepository.DeleteAllAsync();
         }
 
-        public Task<bool> DeleteAsync(City item)
+        public Task<bool> DeleteAsync(CityDto item)
         {
             if (item == null)
             {
                 throw new ArgumentNullException("unable to delete the given item because is null");
             }
-            return cityRepository.DeleteAsync(item);
+            return cityRepository.DeleteAsync(mapper.Map<City>(item));
         }
 
-        public Task<IEnumerable<City>> FindAllAsync()
+        public async Task<IEnumerable<CityDto>> FindAllAsync()
         {
-            return cityRepository.FindAllAsync();
+            return mapper.Map<IEnumerable<CityDto>>(await cityRepository.FindAllAsync());
         }
 
-        public Task<City> FindByIdAsync(int id)
+        public async Task<CityDto> FindByIdAsync(int id)
         {
             if (id < 1)
             {
                 throw new ArgumentException($"unable to find the item because gived id <{id}> is not valid");
             }
-            return cityRepository.FindByIdAsync(id);
+            return mapper.Map<CityDto>(await cityRepository.FindByIdAsync(id));
         }
 
-        public Task<BsonValue> InsertAsync(City item)
+        public Task<BsonValue> InsertAsync(CityDto item)
         {
             if (item == null)
             {
@@ -57,10 +61,10 @@ namespace BusinnesLogic.Services
             Log.Debug("{method} insert item with name <{cityName}>",
                 System.Reflection.MethodBase.GetCurrentMethod().ReflectedType.Name,
                 item.Name);
-            return cityRepository.InsertAsync(item);
+            return cityRepository.InsertAsync(mapper.Map<City>(item));
         }
 
-        public Task<int> InsertItemsAsync(IEnumerable<City> items)
+        public Task<int> InsertItemsAsync(IEnumerable<CityDto> items)
         {
             if (items == null)
             {
@@ -71,10 +75,10 @@ namespace BusinnesLogic.Services
                 System.Reflection.MethodBase.GetCurrentMethod().ReflectedType.Name,
                 items.Count());
 
-            return cityRepository.InsertItemsAsync(items);
+            return cityRepository.InsertItemsAsync(mapper.Map<IEnumerable<City>>(items));
         }
 
-        public Task<bool> UpdateAsync(City item)
+        public Task<bool> UpdateAsync(CityDto item)
         {
             if (item == null)
             {
@@ -86,7 +90,7 @@ namespace BusinnesLogic.Services
                 item.Id,
                 item.Name);
 
-            return cityRepository.UpdateAsync(item);
+            return cityRepository.UpdateAsync(mapper.Map<City>(item));
         }
     }
 }
