@@ -11,10 +11,6 @@ namespace Core
 
         public static IServiceProvider Init()
         {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .CreateLogger();
-
             var serviceProvider =
                 new ServiceCollection()
                     .ConfigureRepository()

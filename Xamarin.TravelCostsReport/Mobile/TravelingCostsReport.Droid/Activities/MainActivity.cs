@@ -28,6 +28,8 @@ namespace TravelingCostsReport.Droid.Activities
         private TravelDetailViewPresenter presenter;
         private TravelDetailsItemAdapter adapterItem;
 
+        private ItemTouchHelper mItemTouchHelper;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -43,6 +45,10 @@ namespace TravelingCostsReport.Droid.Activities
 
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapterItem = new TravelDetailsItemAdapter(this, presenter));
+
+            ItemTouchHelper.Callback callback = new Helpers.ItemTouchHelper(adapterItem);
+            mItemTouchHelper = new ItemTouchHelper(callback);
+            mItemTouchHelper.AttachToRecyclerView(recyclerView);
 
             //FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             //fab.Click += FabOnClick;

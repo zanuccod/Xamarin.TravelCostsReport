@@ -1,5 +1,6 @@
 ﻿using System;
 using Android.App;
+using Serilog;
 
 namespace TravelingCostsReport.Droid
 {
@@ -12,6 +13,11 @@ namespace TravelingCostsReport.Droid
             : base(handle, transfer)
         {
             Current = this;
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.AndroidLog()
+                .MinimumLevel.Debug()
+                .CreateLogger();
         }
 
         public override void OnCreate()

@@ -6,6 +6,8 @@ using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using BusinnesLogic.Dto;
 using Core.Presenters;
+using Serilog;
+using TravelingCostsReport.Droid.Helpers;
 
 namespace TravelingCostsReport.Droid.Adapters
 {
@@ -26,7 +28,7 @@ namespace TravelingCostsReport.Droid.Adapters
         }
     }
 
-    public class TravelDetailsItemAdapter : RecyclerView.Adapter
+    public class TravelDetailsItemAdapter : RecyclerView.Adapter, IItemTouchHelperListener
     {
         public event EventHandler<CityDto> ItemClick;
         public event EventHandler<CityDto> ItemLongClick;
@@ -63,6 +65,11 @@ namespace TravelingCostsReport.Droid.Adapters
             // Create a ViewHolder to hold view references inside the CardView:
             ItemsViewHolder item = new ItemsViewHolder(itemView, OnClick, OnLongClick);
             return item;
+        }
+
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position)
+        {
+            Log.Information($"direction: <{direction}>, position: <{position}>");
         }
     }
 }
