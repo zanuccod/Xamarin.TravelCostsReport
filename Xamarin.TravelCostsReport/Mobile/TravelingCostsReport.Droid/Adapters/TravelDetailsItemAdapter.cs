@@ -51,20 +51,16 @@ namespace TravelingCostsReport.Droid.Adapters
         {
             var vh = holder as ItemsViewHolder;
 
-            // Load the photo caption from the photo album:
             vh.Name.Text = viewModel.Items.ElementAt(position).Name;
             vh.OrderList.Text = viewModel.Items.ElementAt(position).Index;
-            Log.Information($"OnBindViewHolder: position <{position}>, holderPosition <{holder.Position}> OrderList <{vh.OrderList.Text}>");
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View itemView = LayoutInflater.From(parent.Context).
+            var itemView = LayoutInflater.From(parent.Context).
                                           Inflate(Resource.Layout.adapter_travel_item, parent, false);
 
-            // Create a ViewHolder to hold view references inside the CardView:
-            ItemsViewHolder item = new ItemsViewHolder(itemView, OnClick, OnLongClick);
-            return item;
+            return new ItemsViewHolder(itemView, OnClick, OnLongClick);
         }
 
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position)
@@ -72,19 +68,11 @@ namespace TravelingCostsReport.Droid.Adapters
             switch (direction)
             {
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Left:
+                    viewModel.SubtracktDistanceFromTotalTravelDistance(viewHolder.AdapterPosition);
                     break;
 
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Right:
-                    viewModel.AddDistanceToTotalTravelDistance(viewModel.Items.ElementAt(viewHolder.Position), viewHolder.Position);
-
-                    //var vh = viewHolder as ItemsViewHolder;
-                    //Log.Information($"onSwiped: position <{vh.Position}>, OrderList <{vh.OrderList.Text}>");
-
-                    //vh.OrderList.Text = string.IsNullOrEmpty(vh.OrderList.Text)
-                    //    ? viewModel.CityIndex.ToString()
-                    //    : string.Concat(vh.OrderList.Text, ", ", viewModel.CityIndex);
-
-                    //Log.Information($"onSwiped: OrderList <{vh.OrderList.Text}>");
+                    viewModel.AddDistanceToTotalTravelDistance(viewHolder.AdapterPosition);
                     break;
 
                 default:
