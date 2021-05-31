@@ -68,11 +68,11 @@ namespace TravelingCostsReport.Droid.Adapters
             switch (direction)
             {
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Left:
-                    viewModel.SubtracktDistanceFromTotalTravelDistance(viewHolder.AdapterPosition);
+                    viewModel.AddDistanceToTotalTravelDistance(viewHolder.AdapterPosition);
                     break;
 
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Right:
-                    viewModel.AddDistanceToTotalTravelDistance(viewHolder.AdapterPosition);
+                    viewModel.SubtracktDistanceFromTotalTravelDistance(viewHolder.AdapterPosition);
                     break;
 
                 default:

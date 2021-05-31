@@ -8,6 +8,7 @@ using System.Linq;
 using Core.IViews;
 using System.IO;
 using BusinnesLogic.Helpers;
+using System.Collections.ObjectModel;
 
 namespace Core.Presenters
 {
@@ -19,7 +20,7 @@ namespace Core.Presenters
         private readonly ICityService cityService;
         private readonly ITravelDetailView view;
 
-        private CityDto lastCity;
+        private ICollection<int> selectionHistory;
 
         #endregion
 
@@ -65,6 +66,7 @@ namespace Core.Presenters
             if (disposing)
             {
                 // Dispose managed state (managed objects).
+                Clear();
             }
 
             _disposed = true;
@@ -72,34 +74,78 @@ namespace Core.Presenters
 
         public void AddDistanceToTotalTravelDistance(int position)
         {
-            var city = Items.ElementAt(position);
-            if (lastCity.IsEmpty())
+            if (!selectionHistory.Any())
             {
+                Items.ElementAt(position).Index = CityIndex.ToString();
                 TravelTotalDistance = 0;
-                lastCity = city;
             }
             else
             {
-                var tmp = lastCity.CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(city.Name.ToLower()));
-                TravelTotalDistance += tmp != null ? tmp.Distance : 0;
-                lastCity = city;
-            }
-
-            Items.ElementAt(position).Index = string.IsNullOrEmpty(Items.ElementAt(position).Index)
+                Items.ElementAt(position).Index = string.IsNullOrEmpty(Items.ElementAt(position).Index)
                 ? CityIndex.ToString()
                 : string.Concat(Items.ElementAt(position).Index, ", ", CityIndex);
 
+                var previousCity = Items.ElementAt(selectionHistory.Last());
+                var selectedCity = Items.ElementAt(position);
+                TravelTotalDistance += previousCity
+                    .CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(selectedCity.Name.ToLower()))
+                    .Distance;
+            }
+            selectionHistory.Add(position);
             CityIndex++;
+
+            //var city = Items.ElementAt(position);
+            //if (lastCity.IsEmpty())
+            //{
+            //    TravelTotalDistance = 0;
+            //    lastCity = city;
+            //}
+            //else
+            //{
+            //    var tmp = lastCity.CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(city.Name.ToLower()));
+            //    TravelTotalDistance += tmp != null ? tmp.Distance : 0;
+            //    lastCity = city;
+            //}
+
+            //Items.ElementAt(position).Index = string.IsNullOrEmpty(Items.ElementAt(position).Index)
+            //    ? CityIndex.ToString()
+            //    : string.Concat(Items.ElementAt(position).Index, ", ", CityIndex);
+
+            //CityIndex++;
         }
 
         public void SubtracktDistanceFromTotalTravelDistance(int position)
         {
-            var city = Items.ElementAt(position);
-
-            if (!lastCity.IsEmpty() && city.Equals(lastCity))
+            if (!selectionHistory.Any() ||
+                string.IsNullOrEmpty(Items.ElementAt(position).Index) ||
+                position != selectionHistory.Last())
             {
-
+                return;
             }
+            else if (selectionHistory.Count == 1)
+            {
+                Items.ElementAt(position).Index = string.Empty;
+            }
+            else
+            {
+                var previousCity = Items.ElementAt(selectionHistory.Last());
+                var selectedCity = Items.ElementAt(position);
+
+                // this because "S,Canzian" have different names on the excel
+                var previousCityDistance = previousCity
+                        .CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(selectedCity.Name.ToLower()));
+                TravelTotalDistance -= previousCityDistance != null
+                    ? previousCityDistance.Distance
+                    : 0;
+
+                var tmp = Items.ElementAt(position).Index.Split(",");
+
+                var items = tmp.Take(tmp.Count() - 1);
+                Items.ElementAt(position).Index = string.Join(", ", items);
+            }
+
+            selectionHistory.Remove(selectionHistory.Last());
+            CityIndex--;
         }
 
         public void OnResume()
@@ -123,12 +169,12 @@ namespace Core.Presenters
         private void Init()
         {
             Items = Enumerable.Empty<CityDto>();
+            selectionHistory = new Collection<int>();
             TravelTotalDistance = 0;
             CityIndex = 1;
 
             LoadItemsCommand = new Command(async () => await LoadItems());
 
-            lastCity = new CityDto();
         }
 
         private async Task LoadItems()
@@ -186,6 +232,17 @@ namespace Core.Presenters
                 view.ShowErrorMessage("File <travelData.ods> not exists in the Download folder");
             }
             return Enumerable.Empty<CityDto>();
+        }
+
+        private void Clear()
+        {
+            selectionHistory.Clear();
+            TravelTotalDistance = 0;
+            CityIndex = 1;
+            foreach (var i in Items)
+            {
+                i.Index = string.Empty;
+            }
         }
 
         #endregion
