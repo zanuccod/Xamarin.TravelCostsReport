@@ -35,7 +35,7 @@ namespace TravelingCostsReport.Droid.Adapters
 
         private readonly Activity activity;
         private readonly TravelDetailViewPresenter viewModel;
-
+        private CityDto item;
 
         public TravelDetailsItemAdapter(Activity activity, TravelDetailViewPresenter viewModel)
         {
@@ -50,11 +50,13 @@ namespace TravelingCostsReport.Droid.Adapters
 
         public override void OnBindViewHolder(RecyclerView.ViewHolder holder, int position)
         {
-            ItemsViewHolder vh = holder as ItemsViewHolder;
+            var vh = holder as ItemsViewHolder;
 
             // Load the photo caption from the photo album:
             vh.Name.Text = viewModel.Items.ElementAt(position).Name;
             vh.OrderList.Text = string.Empty;
+
+            item = viewModel.Items.ElementAt(position);
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -69,7 +71,24 @@ namespace TravelingCostsReport.Droid.Adapters
 
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position)
         {
-            Log.Information($"direction: <{direction}>, position: <{position}>");
+            switch (direction)
+            {
+                case AndroidX.RecyclerView.Widget.ItemTouchHelper.Left:
+                    break;
+
+                case AndroidX.RecyclerView.Widget.ItemTouchHelper.Right:
+                    viewModel.AddDistanceToTotalTravelDistance(item);
+
+                    var vh = viewHolder as ItemsViewHolder;
+                    vh.OrderList.Text = string.IsNullOrEmpty(vh.OrderList.Text)
+                        ? viewModel.CityIndex.ToString()
+                        : string.Concat(vh.OrderList.Text, ", ", viewModel.CityIndex);
+
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

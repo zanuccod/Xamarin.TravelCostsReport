@@ -46,8 +46,12 @@ namespace TravelingCostsReport.Droid.Activities
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapterItem = new TravelDetailsItemAdapter(this, presenter));
 
-            ItemTouchHelper.Callback callback = new Helpers.ItemTouchHelper(adapterItem);
-            mItemTouchHelper = new ItemTouchHelper(callback);
+            ItemTouchHelper.SimpleCallback simpleCallback = new Helpers.ItemTouchHelper(
+                0,
+                ItemTouchHelper.Left | ItemTouchHelper.Right,
+                adapterItem);
+
+            mItemTouchHelper = new ItemTouchHelper(simpleCallback);
             mItemTouchHelper.AttachToRecyclerView(recyclerView);
 
             //FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);

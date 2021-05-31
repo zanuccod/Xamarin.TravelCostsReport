@@ -165,5 +165,25 @@ namespace BusinnesLogic.Tests.Dto
             // Assert
             Assert.False(result);
         }
+
+        [Theory]
+        [InlineData(0, null, true)]
+        [InlineData(1, null, false)]
+        [InlineData(1, "pippo", false)]
+        public void IsNull(int id, string name, bool expectedResult)
+        {
+            // Arrange
+            var item = new CityDto()
+            {
+                Id = id,
+                Name = name
+            };
+
+            // Act
+            var result = item.IsEmpty();
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
     }
 }

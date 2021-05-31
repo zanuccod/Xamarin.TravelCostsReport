@@ -1,4 +1,5 @@
-﻿using BusinnesLogic.Helpers;
+﻿using BusinnesLogic.Dto;
+using BusinnesLogic.Helpers;
 using BusinnesLogic.Models;
 using System;
 using System.Collections.Generic;
@@ -28,36 +29,36 @@ namespace BusinnesLogic.Tests.Helpers
         {
             //Arrange
             var fileName = $"TestFiles/{filePath}";
-            var expectedResult = new List<City>()
+            var expectedResult = new List<CityDto>()
             {
-                new City()
+                new CityDto()
                 {
                     Name = "staranzano",
-                    CityItems = new List<CityItem>()
+                    CityItems = new List<CityItemDto>()
                     {
-                        new CityItem()
+                        new CityItemDto()
                         {
                             Name = "Fogliano",
                             Distance = 9
                         } ,
-                        new CityItem()
+                        new CityItemDto()
                         {
                             Name = "Grado centro",
                             Distance = 24
                         }
                     }
                 },
-                new City()
+                new CityDto()
                 {
                     Name = "S.Pier",
-                    CityItems = new List<CityItem>()
+                    CityItems = new List<CityItemDto>()
                     {
-                        new CityItem()
+                        new CityItemDto()
                         {
                             Name = "Fogliano",
                             Distance = 3
                         } ,
-                        new CityItem()
+                        new CityItemDto()
                         {
                             Name = "Grado centro",
                             Distance = 24

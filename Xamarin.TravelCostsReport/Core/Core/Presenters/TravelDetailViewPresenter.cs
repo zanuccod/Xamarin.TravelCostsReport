@@ -18,6 +18,9 @@ namespace Core.Presenters
         private bool _disposed = false;
         private readonly ICityService cityService;
         private readonly ITravelDetailView view;
+        public int CityIndex { get; private set; }
+
+        private CityDto lastCity;
 
         #endregion
 
@@ -67,14 +70,28 @@ namespace Core.Presenters
             _disposed = true;
         }
 
-        public void AddDistanceToTotalTravelDistance(float distance)
+        public void AddDistanceToTotalTravelDistance(CityDto city)
         {
-            TravelTotalDistance += distance;
+            if (lastCity.IsEmpty())
+            {
+                TravelTotalDistance = 0;
+                lastCity = city;
+            }
+            else
+            {
+                var tmp = lastCity.CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(city.Name.ToLower()));
+                TravelTotalDistance += tmp != null ? tmp.Distance : 0;
+                lastCity = city;
+            }
+            CityIndex++;
         }
 
-        public void SubtracktDistanceFromTotalTravelDistance(float distance)
+        public void SubtracktDistanceFromTotalTravelDistance(CityDto city)
         {
-            TravelTotalDistance -= distance;
+            if (!lastCity.IsEmpty() && city.Equals(lastCity))
+            {
+
+            }
         }
 
         public void OnResume()
@@ -98,8 +115,11 @@ namespace Core.Presenters
         {
             Items = Enumerable.Empty<CityDto>();
             TravelTotalDistance = 0;
+            CityIndex = 0;
 
             LoadItemsCommand = new Command(async () => await LoadItems());
+
+            lastCity = new CityDto();
         }
 
         private async Task LoadItems()

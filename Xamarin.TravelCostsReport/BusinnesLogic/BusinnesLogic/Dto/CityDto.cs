@@ -32,6 +32,20 @@ namespace BusinnesLogic.Dto
             return Equals(obj as CityDto);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, CityItems);
+        }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+
+        #endregion
+
+        #region Public Methods
+
         public bool Equals(CityDto other)
         {
             if (other == null || CityItems.Count() != other.CityItems.Count())
@@ -47,14 +61,11 @@ namespace BusinnesLogic.Dto
             return result;
         }
 
-        public override int GetHashCode()
+        public bool IsEmpty()
         {
-            return HashCode.Combine(Name, CityItems);
-        }
-
-        public override string ToString()
-        {
-            return JsonSerializer.Serialize(this);
+            return string.IsNullOrEmpty(Name) &&
+                Id == 0 &&
+                !CityItems.Any();
         }
 
         #endregion
