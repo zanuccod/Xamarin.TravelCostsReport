@@ -12,6 +12,8 @@ namespace BusinnesLogic.Dto
         public string Name { get; set; }
         public IEnumerable<CityItemDto> CityItems { get; set; }
 
+        public string Index { get; set; }
+
         #region Constructor
 
         public CityDto()

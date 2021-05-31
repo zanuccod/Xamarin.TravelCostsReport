@@ -70,7 +70,7 @@ namespace Core.Presenters
             _disposed = true;
         }
 
-        public void AddDistanceToTotalTravelDistance(CityDto city)
+        public void AddDistanceToTotalTravelDistance(CityDto city, int position)
         {
             if (lastCity.IsEmpty())
             {
@@ -83,10 +83,15 @@ namespace Core.Presenters
                 TravelTotalDistance += tmp != null ? tmp.Distance : 0;
                 lastCity = city;
             }
+
+            Items.ElementAt(position).Index = string.IsNullOrEmpty(Items.ElementAt(position).Index)
+                ? CityIndex.ToString()
+                : string.Concat(Items.ElementAt(position).Index, ", ", CityIndex);
+
             CityIndex++;
         }
 
-        public void SubtracktDistanceFromTotalTravelDistance(CityDto city)
+        public void SubtracktDistanceFromTotalTravelDistance(CityDto city, int position)
         {
             if (!lastCity.IsEmpty() && city.Equals(lastCity))
             {
@@ -115,7 +120,7 @@ namespace Core.Presenters
         {
             Items = Enumerable.Empty<CityDto>();
             TravelTotalDistance = 0;
-            CityIndex = 0;
+            CityIndex = 1;
 
             LoadItemsCommand = new Command(async () => await LoadItems());
 

@@ -35,8 +35,7 @@ namespace TravelingCostsReport.Droid.Adapters
 
         private readonly Activity activity;
         private readonly TravelDetailViewPresenter viewModel;
-        private CityDto item;
-
+        
         public TravelDetailsItemAdapter(Activity activity, TravelDetailViewPresenter viewModel)
         {
             this.activity = activity;
@@ -54,9 +53,8 @@ namespace TravelingCostsReport.Droid.Adapters
 
             // Load the photo caption from the photo album:
             vh.Name.Text = viewModel.Items.ElementAt(position).Name;
-            vh.OrderList.Text = string.Empty;
-
-            item = viewModel.Items.ElementAt(position);
+            vh.OrderList.Text = viewModel.Items.ElementAt(position).Index;
+            Log.Information($"OnBindViewHolder: position <{position}>, holderPosition <{holder.Position}> OrderList <{vh.OrderList.Text}>");
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -77,13 +75,16 @@ namespace TravelingCostsReport.Droid.Adapters
                     break;
 
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Right:
-                    viewModel.AddDistanceToTotalTravelDistance(item);
+                    viewModel.AddDistanceToTotalTravelDistance(viewModel.Items.ElementAt(viewHolder.Position), viewHolder.Position);
 
-                    var vh = viewHolder as ItemsViewHolder;
-                    vh.OrderList.Text = string.IsNullOrEmpty(vh.OrderList.Text)
-                        ? viewModel.CityIndex.ToString()
-                        : string.Concat(vh.OrderList.Text, ", ", viewModel.CityIndex);
+                    //var vh = viewHolder as ItemsViewHolder;
+                    //Log.Information($"onSwiped: position <{vh.Position}>, OrderList <{vh.OrderList.Text}>");
 
+                    //vh.OrderList.Text = string.IsNullOrEmpty(vh.OrderList.Text)
+                    //    ? viewModel.CityIndex.ToString()
+                    //    : string.Concat(vh.OrderList.Text, ", ", viewModel.CityIndex);
+
+                    //Log.Information($"onSwiped: OrderList <{vh.OrderList.Text}>");
                     break;
 
                 default:
