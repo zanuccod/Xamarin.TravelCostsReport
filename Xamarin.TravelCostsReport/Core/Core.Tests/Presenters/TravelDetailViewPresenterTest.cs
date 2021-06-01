@@ -14,22 +14,22 @@ namespace Core.Tests.Presenters
     public class TravelDetailViewPresenterTest
     {
         private readonly TravelDetailViewPresenter presenter;
-        private readonly ICityService cityService;
-        private readonly ITravelDetailView view;
+        private readonly Mock<ICityService> mockCityService;
+        private readonly Mock<ITravelDetailView> mockView;
 
         public TravelDetailViewPresenterTest()
         {
-            cityService = Mock.Of<ICityService>();
-            view = Mock.Of<ITravelDetailView>();
+            mockCityService = new Mock<ICityService>();
+            mockView = new Mock<ITravelDetailView>();
 
-            presenter = new TravelDetailViewPresenter(view, cityService);
-            AddDummyData();
+            presenter = new TravelDetailViewPresenter(mockView.Object, mockCityService.Object);
         }
 
         [Fact]
         public void AddTravelStep_FirstSelection_ShouldAddOnlySelectionToHistory()
         {
             // Arrange
+            presenter.Items = GetDummyData();
             var itemIndex = 2;
 
             // Act
@@ -47,6 +47,7 @@ namespace Core.Tests.Presenters
         public void AddTravelStep_SecondSelection_ShouldAddSelectionToHistoryAndDistance()
         {
             // Arrange
+            presenter.Items = GetDummyData();
             presenter.AddTravelStep(1); 
 
             // travel distance from city_2 to city_3 => 30
@@ -68,6 +69,7 @@ namespace Core.Tests.Presenters
         public void RemoveTravelStep_NoPreviousSelection_NothingToDo()
         {
             // Act
+            presenter.Items = GetDummyData();
             presenter.RemoveTravelStep(1);
 
             // Assert
@@ -88,6 +90,7 @@ namespace Core.Tests.Presenters
             int expectedSelectionHistoryCount)
         {
             // Arrange
+            presenter.Items = GetDummyData();
             presenter.AddTravelStep(stepToAdd);
 
             // Act
@@ -103,6 +106,7 @@ namespace Core.Tests.Presenters
         public void RemoveTravelStep_RemovedLastSelection_ShouldSubtrackTheDistance()
         {
             // Arrange
+            presenter.Items = GetDummyData();
             presenter.AddTravelStep(0);
             presenter.AddTravelStep(2); // total_distance 30
             presenter.AddTravelStep(3); // total_distance 70
@@ -121,9 +125,54 @@ namespace Core.Tests.Presenters
             Assert.Equal(3, presenter.Items.ElementAt(3).TravelSteps.First());
         }
 
-        private void AddDummyData()
+        [Fact]
+        public void LoadItemsComma_ReadTwoElements_Success()
         {
+            // Arrange
+            var expectedData = GetDummyData();
+            mockCityService
+                .Setup(x => x.FindAllAsync())
+                .ReturnsAsync(expectedData);
+
+            // Act
+            presenter.LoadItemsCommand.Execute(null);
+
+            // Assert
+            Assert.Equal(expectedData, presenter.Items);
+        }
+
+        /// <summary>
+        /// If LoadItemsCommand don't stop when isBusy is true delete viewModel.Items of two elements
+        /// and load list on 1 element.
+        /// Finally Assert failed.
+        /// </summary>
+        [Fact]
+        public void LoadItemsCommand_IsBusy_NothingToDo()
+        {
+            // Arrange
+            presenter.IsBusy = true;
+
+            var expectedData = GetDummyData();
+            mockCityService
+                .Setup(x => x.FindAllAsync())
+                .ReturnsAsync(expectedData);
+
             presenter.Items = new List<CityDto>()
+            {
+                new CityDto(),
+                new CityDto()
+            };
+
+            // Act
+            presenter.LoadItemsCommand.Execute(null);
+
+            // Assert
+            Assert.Equal(2, presenter.Items.Count());
+        }
+
+        private IEnumerable<CityDto> GetDummyData()
+        {
+            return new List<CityDto>()
             {
                 // 0
                 new CityDto()

@@ -143,9 +143,9 @@ namespace Core.Presenters
             {
                 Items = await cityService.FindAllAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
             finally
             {
@@ -156,7 +156,7 @@ namespace Core.Presenters
         private Task ImportDataFromExcel()
         {
             var items = ReadDataFromExcel();
-            if (items.Count() > 0)
+            if (items.Any())
             {
                 cityService.InsertItemsAsync(items);
             }
