@@ -44,7 +44,7 @@ namespace TravelingCostsReport.Droid.Activities
             var recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
 
             recyclerView.HasFixedSize = true;
-            recyclerView.SetAdapter(adapterItem = new TravelDetailsItemAdapter(this, presenter));
+            recyclerView.SetAdapter(adapterItem = new TravelDetailsItemAdapter(presenter));
 
             ItemTouchHelper.SimpleCallback simpleCallback = new Helpers.ItemTouchHelper(
                 0,

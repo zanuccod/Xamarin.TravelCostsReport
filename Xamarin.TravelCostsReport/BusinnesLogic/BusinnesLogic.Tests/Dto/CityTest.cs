@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using BusinnesLogic.Dto;
 using Xunit;
 
@@ -181,6 +182,86 @@ namespace BusinnesLogic.Tests.Dto
 
             // Act
             var result = item.IsEmpty();
+
+            // Assert
+            Assert.Equal(expectedResult, result);
+        }
+
+        [Theory]
+        [InlineData(new int[] { }, 1, new int[] { 1 })]
+        [InlineData(new int[] { 1 }, 2, new int[] { 1, 2 })]
+        [InlineData(new int[] { 1, 2 }, 3, new int[] { 1, 2, 3 })]
+        public void AddTravelStep(int[] startState, int travelStep, int[] expectedResult)
+        {
+            // Arrange
+            var travelSteps = new Collection<int>();
+            foreach (var step in startState)
+            {
+                travelSteps.Add(step);
+            }
+            var item = new CityDto(travelSteps);
+
+            // Act
+            item.AddTravelStep(travelStep);
+
+            // Assert
+            Assert.Equal(expectedResult, item.TravelSteps);
+        }
+
+        [Theory]
+        [InlineData(new int[] { }, new int[] { })]
+        [InlineData(new int[] { 2 }, new int[] { })]
+        [InlineData(new int[] { 2, 3 }, new int[] { 2 })]
+        [InlineData(new int[] { 2, 3, 4 }, new int[] { 2, 3 })]
+        public void RemoveLastTravelStep(int[] index, int[] expectedResult)
+        {
+            // Arrange
+            var item = new CityDto();
+            foreach(var step in index)
+            {
+                item.AddTravelStep(step);
+            }
+
+            // Act
+            item.RemoveLastTravelStep();
+
+            // Assert
+            Assert.Equal(expectedResult, item.TravelSteps);
+        }
+
+        [Theory]
+        [InlineData("", 0)]
+        [InlineData(null, 0)]
+        [InlineData("Pippo_10", 0)]
+        [InlineData("Pippo_1", 20)]
+        public void GetDistanceTo(string targetCity, float expectedResult)
+        {
+            // Arrange
+            var city = new CityDto()
+            {
+                CityItems = new List<CityItemDto>()
+                {
+                    new CityItemDto()
+                    {
+                        Name = "Pippo",
+                        Distance = 10
+                    },
+                    new CityItemDto()
+                    {
+                        Name = "Pippo_1",
+                        Distance = 20
+                    },
+                    new CityItemDto()
+                    {
+                        Name = "Pippo_2",
+                        Distance = 30
+                    }
+                }
+            };
+
+
+            // Act
+            var result = city.GetDistanceTo(targetCity);
 
             // Assert
             Assert.Equal(expectedResult, result);

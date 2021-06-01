@@ -33,12 +33,10 @@ namespace TravelingCostsReport.Droid.Adapters
         public event EventHandler<CityDto> ItemClick;
         public event EventHandler<CityDto> ItemLongClick;
 
-        private readonly Activity activity;
         private readonly TravelDetailViewPresenter viewModel;
         
-        public TravelDetailsItemAdapter(Activity activity, TravelDetailViewPresenter viewModel)
+        public TravelDetailsItemAdapter(TravelDetailViewPresenter viewModel)
         {
-            this.activity = activity;
             this.viewModel = viewModel;
         }
 
@@ -52,7 +50,7 @@ namespace TravelingCostsReport.Droid.Adapters
             var vh = holder as ItemsViewHolder;
 
             vh.Name.Text = viewModel.Items.ElementAt(position).Name;
-            vh.OrderList.Text = viewModel.Items.ElementAt(position).Index;
+            vh.OrderList.Text = string.Join(", ", viewModel.Items.ElementAt(position).TravelSteps);
         }
 
         public override RecyclerView.ViewHolder OnCreateViewHolder(ViewGroup parent, int viewType)
@@ -68,11 +66,11 @@ namespace TravelingCostsReport.Droid.Adapters
             switch (direction)
             {
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Left:
-                    viewModel.AddDistanceToTotalTravelDistance(viewHolder.AdapterPosition);
+                    viewModel.AddTravelStep(viewHolder.AdapterPosition);
                     break;
 
                 case AndroidX.RecyclerView.Widget.ItemTouchHelper.Right:
-                    viewModel.SubtracktDistanceFromTotalTravelDistance(viewHolder.AdapterPosition);
+                    viewModel.RemoveTravelStep(viewHolder.AdapterPosition);
                     break;
 
                 default:

@@ -28,7 +28,7 @@ namespace Core.Presenters
 
         public IEnumerable<CityDto> Items { get; private set; }
         public float TravelTotalDistance { get; private set; }
-        public int CityIndex { get; private set; }
+        public int TravelStepIndex { get; private set; }
 
         #endregion
 
@@ -72,80 +72,35 @@ namespace Core.Presenters
             _disposed = true;
         }
 
-        public void AddDistanceToTotalTravelDistance(int position)
+        public void AddTravelStep(int position)
         {
             if (!selectionHistory.Any())
             {
-                Items.ElementAt(position).Index = CityIndex.ToString();
+                Items.ElementAt(position).AddTravelStep(TravelStepIndex);
                 TravelTotalDistance = 0;
             }
             else
             {
-                Items.ElementAt(position).Index = string.IsNullOrEmpty(Items.ElementAt(position).Index)
-                ? CityIndex.ToString()
-                : string.Concat(Items.ElementAt(position).Index, ", ", CityIndex);
-
-                var previousCity = Items.ElementAt(selectionHistory.Last());
-                var selectedCity = Items.ElementAt(position);
-                TravelTotalDistance += previousCity
-                    .CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(selectedCity.Name.ToLower()))
-                    .Distance;
+                Items.ElementAt(position).AddTravelStep(TravelStepIndex);
+                TravelTotalDistance += GetDistanceFromTo(selectionHistory.Last(), position);
             }
             selectionHistory.Add(position);
-            CityIndex++;
-
-            //var city = Items.ElementAt(position);
-            //if (lastCity.IsEmpty())
-            //{
-            //    TravelTotalDistance = 0;
-            //    lastCity = city;
-            //}
-            //else
-            //{
-            //    var tmp = lastCity.CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(city.Name.ToLower()));
-            //    TravelTotalDistance += tmp != null ? tmp.Distance : 0;
-            //    lastCity = city;
-            //}
-
-            //Items.ElementAt(position).Index = string.IsNullOrEmpty(Items.ElementAt(position).Index)
-            //    ? CityIndex.ToString()
-            //    : string.Concat(Items.ElementAt(position).Index, ", ", CityIndex);
-
-            //CityIndex++;
+            TravelStepIndex++;
         }
 
-        public void SubtracktDistanceFromTotalTravelDistance(int position)
+        public void RemoveTravelStep(int position)
         {
             if (!selectionHistory.Any() ||
-                string.IsNullOrEmpty(Items.ElementAt(position).Index) ||
+                Items.ElementAt(position).TravelSteps.Count == 0 ||
                 position != selectionHistory.Last())
             {
                 return;
             }
-            else if (selectionHistory.Count == 1)
-            {
-                Items.ElementAt(position).Index = string.Empty;
-            }
-            else
-            {
-                var previousCity = Items.ElementAt(selectionHistory.Last());
-                var selectedCity = Items.ElementAt(position);
 
-                // this because "S,Canzian" have different names on the excel
-                var previousCityDistance = previousCity
-                        .CityItems.FirstOrDefault(x => x.Name.ToLower().Equals(selectedCity.Name.ToLower()));
-                TravelTotalDistance -= previousCityDistance != null
-                    ? previousCityDistance.Distance
-                    : 0;
-
-                var tmp = Items.ElementAt(position).Index.Split(",");
-
-                var items = tmp.Take(tmp.Count() - 1);
-                Items.ElementAt(position).Index = string.Join(", ", items);
-            }
-
+            TravelTotalDistance -= GetDistanceFromTo(selectionHistory.Last(), position);
+            Items.ElementAt(position).RemoveLastTravelStep();
             selectionHistory.Remove(selectionHistory.Last());
-            CityIndex--;
+            TravelStepIndex--;
         }
 
         public void OnResume()
@@ -171,10 +126,9 @@ namespace Core.Presenters
             Items = Enumerable.Empty<CityDto>();
             selectionHistory = new Collection<int>();
             TravelTotalDistance = 0;
-            CityIndex = 1;
+            TravelStepIndex = 1;
 
             LoadItemsCommand = new Command(async () => await LoadItems());
-
         }
 
         private async Task LoadItems()
@@ -238,11 +192,25 @@ namespace Core.Presenters
         {
             selectionHistory.Clear();
             TravelTotalDistance = 0;
-            CityIndex = 1;
+            TravelStepIndex = 1;
             foreach (var i in Items)
             {
-                i.Index = string.Empty;
+                i.TravelSteps.Clear();
             }
+        }
+
+        private float GetDistanceFromTo(int sourceCityIndex, int targetCityIndex)
+        {
+            var sourceCity = Items.ElementAt(sourceCityIndex);
+            var targetCity = Items.ElementAt(targetCityIndex);
+
+            var distance = sourceCity.GetDistanceTo(targetCity.Name);
+
+            if (distance == 0)
+            {
+                view.ShowErrorMessage($"Source city <{sourceCity.Name}> has no reference to the target city <{targetCity.Name}>");
+            }
+            return distance;
         }
 
         #endregion

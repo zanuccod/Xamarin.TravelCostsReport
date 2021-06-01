@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
 
@@ -12,13 +13,20 @@ namespace BusinnesLogic.Dto
         public string Name { get; set; }
         public IEnumerable<CityItemDto> CityItems { get; set; }
 
-        public string Index { get; set; }
+        public ICollection<int> TravelSteps { get; private set; }
 
         #region Constructor
 
         public CityDto()
         {
             CityItems = Enumerable.Empty<CityItemDto>();
+            TravelSteps = new Collection<int>();
+        }
+
+        public CityDto(Collection<int> travelStep)
+        {
+            CityItems = Enumerable.Empty<CityItemDto>();
+            TravelSteps = travelStep;
         }
 
         #endregion
@@ -68,6 +76,27 @@ namespace BusinnesLogic.Dto
             return string.IsNullOrEmpty(Name) &&
                 Id == 0 &&
                 !CityItems.Any();
+        }
+
+        public void AddTravelStep(int travelStep)
+        {
+            TravelSteps.Add(travelStep);
+        }
+
+        public void RemoveLastTravelStep()
+        {
+            if (TravelSteps.Count > 0)
+            {
+                TravelSteps.Remove(TravelSteps.Last());
+            }    
+        }
+
+        public float GetDistanceTo(string cityName)
+        {
+            var targetCity = CityItems.FirstOrDefault(x => x.Name.Equals(cityName));
+            return targetCity != null
+                ? targetCity.Distance
+                : 0;
         }
 
         #endregion
