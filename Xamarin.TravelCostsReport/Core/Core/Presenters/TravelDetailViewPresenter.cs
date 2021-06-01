@@ -172,10 +172,7 @@ namespace Core.Presenters
         private IEnumerable<CityDto> ReadDataFromExcel()
         {
             var fileName = "travelData.ods";
-            var path = Path.Combine(
-                Android.OS.Environment.ExternalStorageDirectory.Path,
-                Android.OS.Environment.DirectoryDownloads,
-                fileName);
+            var path = view.GetFilePath(fileName);
 
             if (File.Exists(path))
             {

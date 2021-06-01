@@ -7,5 +7,6 @@ namespace Core.IViews
     {
         void ShowErrorMessage(string message);
         void GetExternalPermissions();
+        string GetFilePath(string fileName);
     }
 }

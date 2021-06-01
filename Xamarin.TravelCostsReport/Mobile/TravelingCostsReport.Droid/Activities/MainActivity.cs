@@ -128,5 +128,13 @@ namespace TravelingCostsReport.Droid.Activities
             }
             RequestPermissions(PermissionsLocation, 999);
         }
+
+        public string GetFilePath(string fileName)
+        {
+            return Path.Combine(
+                Android.OS.Environment.ExternalStorageDirectory.Path,
+                Android.OS.Environment.DirectoryDownloads,
+                fileName);
+        }
     }
 }
