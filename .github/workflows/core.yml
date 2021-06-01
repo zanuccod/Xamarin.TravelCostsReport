@@ -45,7 +45,6 @@ jobs:
             
             dotnet build Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic -c Release --no-restore
             dotnet build Xamarin.TravelCostsReport/Core/Core -c Release --no-restore
-            dotnet build Xamarin.TravelCostsReport/Mobile/TravelingCostsReport -c Release --no-restore
             
             dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.Tests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT}
             dotnet test -c Release Xamarin.TravelCostsReport/BusinnesLogic/BusinnesLogic.IntegrationTests /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=${COVERLET_OUPUT} /p:MergeWith=${COVERLET_OUPUT}
