@@ -3,7 +3,7 @@ name: Core
 on:
   push:
     paths-ignore:
-    - 'Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Android/**'
+    - 'Xamarin.TravelCostsReport/Mobile/TravelingCostsReport.Droid/**'
      
   workflow_dispatch:
     inputs:
