@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace BusinnesLogic.Dto
 {
-    public class CityItemDto : IEquatable<CityItemDto>
+    public sealed class CityItemDto : IEquatable<CityItemDto>
     {
         public string Name { get; set; }
         public int Distance { get; set; }

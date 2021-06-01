@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace BusinnesLogic.Dto
 {
-    public class CityDto : IEquatable<CityDto>
+    public sealed class CityDto : IEquatable<CityDto>
     {
         public int Id { get; set; }
 

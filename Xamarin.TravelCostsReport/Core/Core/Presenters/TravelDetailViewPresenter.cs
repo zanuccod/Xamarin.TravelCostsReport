@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 
 namespace Core.Presenters
 {
-    public class TravelDetailViewPresenter : BaseViewPresenter, IDisposable
+    public sealed class TravelDetailViewPresenter : BaseViewPresenter, IDisposable
     {
         #region Private Fields
 
@@ -20,15 +20,16 @@ namespace Core.Presenters
         private readonly ICityService cityService;
         private readonly ITravelDetailView view;
 
-        private ICollection<int> selectionHistory;
+        public const int START_TRAVEL_STEP_INDEX = 1;
 
         #endregion
 
         #region Public Properties
 
-        public IEnumerable<CityDto> Items { get; private set; }
+        public IEnumerable<CityDto> Items { get; set; }
+        public ICollection<int> SelectionHistory { get; private set; }
         public float TravelTotalDistance { get; private set; }
-        public int TravelStepIndex { get; private set; }
+        public int NextTravelStepIndex { get; private set; }
 
         #endregion
 
@@ -56,7 +57,7 @@ namespace Core.Presenters
         public void Dispose() => Dispose(true);
 
         // Protected implementation of Dispose pattern.
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_disposed)
             {
@@ -74,33 +75,31 @@ namespace Core.Presenters
 
         public void AddTravelStep(int position)
         {
-            if (!selectionHistory.Any())
-            {
-                Items.ElementAt(position).AddTravelStep(TravelStepIndex);
-                TravelTotalDistance = 0;
-            }
-            else
-            {
-                Items.ElementAt(position).AddTravelStep(TravelStepIndex);
-                TravelTotalDistance += GetDistanceFromTo(selectionHistory.Last(), position);
-            }
-            selectionHistory.Add(position);
-            TravelStepIndex++;
+            TravelTotalDistance += SelectionHistory.Any()
+                ? GetDistanceFromTo(SelectionHistory.Last(), position)
+                : 0;
+
+            Items.ElementAt(position).AddTravelStep(NextTravelStepIndex);
+            SelectionHistory.Add(position);
+            NextTravelStepIndex++;
         }
 
         public void RemoveTravelStep(int position)
         {
-            if (!selectionHistory.Any() ||
+            if (!SelectionHistory.Any() ||
                 Items.ElementAt(position).TravelSteps.Count == 0 ||
-                position != selectionHistory.Last())
+                position != SelectionHistory.Last())
             {
                 return;
             }
 
-            TravelTotalDistance -= GetDistanceFromTo(selectionHistory.Last(), position);
+            TravelTotalDistance -= SelectionHistory.Count > 1
+                ? GetDistanceFromTo(SelectionHistory.ElementAt(SelectionHistory.Count -2), position)
+                : 0;
+
             Items.ElementAt(position).RemoveLastTravelStep();
-            selectionHistory.Remove(selectionHistory.Last());
-            TravelStepIndex--;
+            SelectionHistory.Remove(SelectionHistory.Last());
+            NextTravelStepIndex--;
         }
 
         public void OnResume()
@@ -124,16 +123,15 @@ namespace Core.Presenters
         private void Init()
         {
             Items = Enumerable.Empty<CityDto>();
-            selectionHistory = new Collection<int>();
+            SelectionHistory = new Collection<int>();
             TravelTotalDistance = 0;
-            TravelStepIndex = 1;
+            NextTravelStepIndex = START_TRAVEL_STEP_INDEX;
 
             LoadItemsCommand = new Command(async () => await LoadItems());
         }
 
         private async Task LoadItems()
         {
-
             if (IsBusy)
             {
                 return;
@@ -187,9 +185,9 @@ namespace Core.Presenters
 
         private void Clear()
         {
-            selectionHistory.Clear();
+            SelectionHistory.Clear();
             TravelTotalDistance = 0;
-            TravelStepIndex = 1;
+            NextTravelStepIndex = START_TRAVEL_STEP_INDEX;
             foreach (var i in Items)
             {
                 i.TravelSteps.Clear();
