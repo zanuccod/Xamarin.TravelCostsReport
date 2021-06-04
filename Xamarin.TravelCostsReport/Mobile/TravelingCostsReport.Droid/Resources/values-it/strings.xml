@@ -1,0 +1,12 @@
+﻿<resources>
+    <string name="app_name">TravelingCostsReport.Droid</string>
+    <string name="action_settings">Opzioni</string>
+    <string name="main_activity_action_import_excel_data">Importa dati dal file Excel</string>
+    <string name="main_activity_action_delete_all_data">Cancella tutti i dati</string>
+
+    <string name="title_warning">Attenzione</string>
+    <string name="title_error">Errore</string>
+    <string name="main_activity_warning_message_delete_all_data">Tutti i dati saranno cancellati, continuare?</string>
+    <string name="button_ok">Ok</string>
+    <string name="button_cancel">Cancella</string>
+</resources>

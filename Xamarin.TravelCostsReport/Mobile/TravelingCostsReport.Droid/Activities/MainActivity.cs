@@ -108,7 +108,6 @@ namespace TravelingCostsReport.Droid.Activities
 
         #endregion
 
-
         #region Private Methods
 
         private void FabOnClick(object sender, EventArgs eventArgs)
@@ -164,7 +163,7 @@ namespace TravelingCostsReport.Droid.Activities
 
         public void ShowDeleteAllDataWarningPopupMessage()
         {
-            var tmp = new AndroidX.AppCompat.App.AlertDialog.Builder(this)
+            var popup = new AndroidX.AppCompat.App.AlertDialog.Builder(this)
                 .SetTitle(Resource.String.title_warning)
                 .SetMessage(Resource.String.main_activity_warning_message_delete_all_data)
                 .SetPositiveButton(
@@ -180,7 +179,7 @@ namespace TravelingCostsReport.Droid.Activities
                 .SetNegativeButton(Resource.String.button_cancel, (c, ev) => { })
                 .Create();
 
-            tmp.Show();
+            popup.Show();
         }
 
         #endregion
