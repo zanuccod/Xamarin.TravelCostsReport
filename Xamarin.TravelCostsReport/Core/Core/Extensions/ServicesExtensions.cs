@@ -7,7 +7,7 @@ namespace Core.Extensions
     {
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
         {
-            services.AddTransient<ICityService, CityService>();
+            services.AddScoped<ICityService, CityService>();
 
             return services;
         }

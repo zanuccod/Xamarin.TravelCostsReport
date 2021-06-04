@@ -15,10 +15,8 @@ using TravelingCostsReport.Droid.Adapters;
 using AndroidX.RecyclerView.Widget;
 using System.IO;
 using Xamarin.Essentials;
-using BusinnesLogic.Helpers;
 using Android;
 using Android.Content.PM;
-using System.Threading.Tasks;
 
 namespace TravelingCostsReport.Droid.Activities
 {
@@ -30,6 +28,8 @@ namespace TravelingCostsReport.Droid.Activities
 
         private ItemTouchHelper mItemTouchHelper;
 
+        #region Overridden Methods
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -38,7 +38,7 @@ namespace TravelingCostsReport.Droid.Activities
 
             presenter = new TravelDetailViewPresenter(this, Startup.GetService<ICityService>());
 
-            Toolbar toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
+            var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
             var recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
@@ -46,7 +46,7 @@ namespace TravelingCostsReport.Droid.Activities
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapterItem = new TravelDetailsItemAdapter(presenter));
 
-            ItemTouchHelper.SimpleCallback simpleCallback = new Helpers.ItemTouchHelper(
+            var simpleCallback = new Helpers.ItemTouchHelper(
                 0,
                 ItemTouchHelper.Left | ItemTouchHelper.Right,
                 adapterItem);
@@ -83,20 +83,23 @@ namespace TravelingCostsReport.Droid.Activities
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_import_excel_data)
+            switch (item.ItemId)
             {
-                return true;
+                case Resource.Id.action_import_excel_data:
+                    presenter
+                        .ImportData()
+                        .GetAwaiter()
+                        .GetResult();
+                    return true;
+                case Resource.Id.action_delete_all_data:
+                    presenter
+                        .DeleteAllData()
+                        .GetAwaiter()
+                        .GetResult();
+                    return true;
+                default:
+                    return base.OnOptionsItemSelected(item);
             }
-
-            return base.OnOptionsItemSelected(item);
-        }
-
-        private void FabOnClick(object sender, EventArgs eventArgs)
-        {
-            View view = (View)sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (View.IOnClickListener)null).Show();
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
@@ -106,9 +109,34 @@ namespace TravelingCostsReport.Droid.Activities
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
+        #endregion
+
+
+        #region Private Methods
+
+        private void FabOnClick(object sender, EventArgs eventArgs)
+        {
+            View view = (View)sender;
+            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
+                .SetAction("Action", (View.IOnClickListener)null).Show();
+        }
+
+        #endregion
+
+        #region ITravelView
+
+        public void ReloadActivity()
+        {
+            var intent = Intent;
+            Finish();
+            StartActivity(intent);
+        }
+
         public void ShowErrorMessage(string message)
         {
-            Android.Widget.Toast.MakeText(this, message, Android.Widget.ToastLength.Short).Show();
+            Android.Widget
+                .Toast.MakeText(this, message, Android.Widget.ToastLength.Short)
+                .Show();
         }
 
         public void GetExternalPermissions()
@@ -136,5 +164,7 @@ namespace TravelingCostsReport.Droid.Activities
                 Android.OS.Environment.DirectoryDownloads,
                 fileName);
         }
+
+        #endregion
     }
 }

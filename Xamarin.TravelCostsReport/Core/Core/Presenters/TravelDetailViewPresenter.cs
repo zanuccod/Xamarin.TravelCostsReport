@@ -105,15 +105,24 @@ namespace Core.Presenters
         public void OnResume()
         {
             LoadItemsCommand.Execute(null);
+        }
 
-            if (Items.Count() == 0)
+        public async Task ImportData()
+        {
+            if (Items.Count() != 0)
             {
-                ImportDataFromExcel()
-                    .GetAwaiter()
-                    .GetResult();
-
-                LoadItemsCommand.Execute(null);
+                await cityService.DeleteAllAsync();
             }
+            await ImportDataFromExcel();
+            LoadItemsCommand.Execute(null);
+            view.ReloadActivity();
+        }
+
+        public async Task DeleteAllData()
+        {
+            await cityService.DeleteAllAsync();
+            LoadItemsCommand.Execute(null);
+            view.ReloadActivity();
         }
 
         #endregion
