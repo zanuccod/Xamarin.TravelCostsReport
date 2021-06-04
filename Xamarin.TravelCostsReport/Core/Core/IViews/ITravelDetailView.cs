@@ -2,7 +2,8 @@
 {
     public interface ITravelDetailView
     {
-        void ShowErrorMessage(string message);
+        void ShowShortToastMessage(string message);
+        void ShowDeleteAllDataWarningPopupMessage();
         void GetExternalPermissions();
         string GetFilePath(string fileName);
         void ReloadActivity();

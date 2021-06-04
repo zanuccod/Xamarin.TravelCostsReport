@@ -92,10 +92,7 @@ namespace TravelingCostsReport.Droid.Activities
                         .GetResult();
                     return true;
                 case Resource.Id.action_delete_all_data:
-                    presenter
-                        .DeleteAllData()
-                        .GetAwaiter()
-                        .GetResult();
+                    ShowDeleteAllDataWarningPopupMessage();
                     return true;
                 default:
                     return base.OnOptionsItemSelected(item);
@@ -132,7 +129,7 @@ namespace TravelingCostsReport.Droid.Activities
             StartActivity(intent);
         }
 
-        public void ShowErrorMessage(string message)
+        public void ShowShortToastMessage(string message)
         {
             Android.Widget
                 .Toast.MakeText(this, message, Android.Widget.ToastLength.Short)
@@ -152,7 +149,7 @@ namespace TravelingCostsReport.Droid.Activities
 
             if (ShouldShowRequestPermissionRationale(Manifest.Permission.ReadExternalStorage))
             {
-                ShowErrorMessage("We need read permission to read the data from the excel file.");
+                ShowShortToastMessage("We need read permission to read the data from the excel file.");
             }
             RequestPermissions(PermissionsLocation, 999);
         }
@@ -163,6 +160,27 @@ namespace TravelingCostsReport.Droid.Activities
                 Android.OS.Environment.ExternalStorageDirectory.Path,
                 Android.OS.Environment.DirectoryDownloads,
                 fileName);
+        }
+
+        public void ShowDeleteAllDataWarningPopupMessage()
+        {
+            var tmp = new AndroidX.AppCompat.App.AlertDialog.Builder(this)
+                .SetTitle(Resource.String.title_warning)
+                .SetMessage(Resource.String.main_activity_warning_message_delete_all_data)
+                .SetPositiveButton(
+                    Resource.String.button_ok,
+                    (c, ev) =>
+                        {
+                            presenter
+                                .DeleteAllData()
+                                .ConfigureAwait(false)
+                                .GetAwaiter()
+                                .GetResult();
+                        })
+                .SetNegativeButton(Resource.String.button_cancel, (c, ev) => { })
+                .Create();
+
+            tmp.Show();
         }
 
         #endregion

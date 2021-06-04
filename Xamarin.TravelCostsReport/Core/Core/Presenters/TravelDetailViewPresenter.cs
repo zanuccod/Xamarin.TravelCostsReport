@@ -171,7 +171,7 @@ namespace Core.Presenters
             }
             else
             {
-                view.ShowErrorMessage("No data to be loaded");
+                view.ShowShortToastMessage("No data to be loaded");
             }
             return Task.CompletedTask;
         }
@@ -187,7 +187,7 @@ namespace Core.Presenters
             }
             else
             {
-                view.ShowErrorMessage("File <travelData.ods> not exists in the Download folder");
+                view.ShowShortToastMessage("File <travelData.ods> not exists in the Download folder");
             }
             return Enumerable.Empty<CityDto>();
         }
@@ -212,7 +212,7 @@ namespace Core.Presenters
 
             if (distance == 0)
             {
-                view.ShowErrorMessage($"Source city <{sourceCity.Name}> has no reference to the target city <{targetCity.Name}>");
+                view.ShowShortToastMessage($"Source city <{sourceCity.Name}> has no reference to the target city <{targetCity.Name}>");
             }
             return distance;
         }

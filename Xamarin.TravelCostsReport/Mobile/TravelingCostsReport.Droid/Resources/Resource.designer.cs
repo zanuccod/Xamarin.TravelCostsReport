@@ -4605,22 +4605,22 @@ namespace TravelingCostsReport.Droid
 			public const int abc_toolbar_collapse_description = 2131623962;
 			
 			// aapt resource value: 0x7F0E001B
-			public const int action_delete_all_data = 2131623963;
-			
-			// aapt resource value: 0x7F0E001C
-			public const int action_import_excel_data = 2131623964;
+			public const int action_settings = 2131623963;
 			
 			// aapt resource value: 0x7F0E001D
-			public const int action_settings = 2131623965;
+			public const int appbar_scrolling_view_behavior = 2131623965;
 			
-			// aapt resource value: 0x7F0E001F
-			public const int appbar_scrolling_view_behavior = 2131623967;
+			// aapt resource value: 0x7F0E001C
+			public const int app_name = 2131623964;
 			
 			// aapt resource value: 0x7F0E001E
-			public const int app_name = 2131623966;
+			public const int bottom_sheet_behavior = 2131623966;
+			
+			// aapt resource value: 0x7F0E001F
+			public const int button_cancel = 2131623967;
 			
 			// aapt resource value: 0x7F0E0020
-			public const int bottom_sheet_behavior = 2131623968;
+			public const int button_ok = 2131623968;
 			
 			// aapt resource value: 0x7F0E0021
 			public const int character_counter_content_description = 2131623969;
@@ -4650,28 +4650,43 @@ namespace TravelingCostsReport.Droid
 			public const int hide_bottom_view_on_scroll_behavior = 2131623977;
 			
 			// aapt resource value: 0x7F0E002A
-			public const int mtrl_chip_close_icon_content_description = 2131623978;
+			public const int main_activity_action_delete_all_data = 2131623978;
 			
 			// aapt resource value: 0x7F0E002B
-			public const int password_toggle_content_description = 2131623979;
+			public const int main_activity_action_import_excel_data = 2131623979;
 			
 			// aapt resource value: 0x7F0E002C
-			public const int path_password_eye = 2131623980;
+			public const int main_activity_warning_message_delete_all_data = 2131623980;
 			
 			// aapt resource value: 0x7F0E002D
-			public const int path_password_eye_mask_strike_through = 2131623981;
+			public const int mtrl_chip_close_icon_content_description = 2131623981;
 			
 			// aapt resource value: 0x7F0E002E
-			public const int path_password_eye_mask_visible = 2131623982;
+			public const int password_toggle_content_description = 2131623982;
 			
 			// aapt resource value: 0x7F0E002F
-			public const int path_password_strike_through = 2131623983;
+			public const int path_password_eye = 2131623983;
 			
 			// aapt resource value: 0x7F0E0030
-			public const int search_menu_title = 2131623984;
+			public const int path_password_eye_mask_strike_through = 2131623984;
 			
 			// aapt resource value: 0x7F0E0031
-			public const int status_bar_notification_info_overflow = 2131623985;
+			public const int path_password_eye_mask_visible = 2131623985;
+			
+			// aapt resource value: 0x7F0E0032
+			public const int path_password_strike_through = 2131623986;
+			
+			// aapt resource value: 0x7F0E0033
+			public const int search_menu_title = 2131623987;
+			
+			// aapt resource value: 0x7F0E0034
+			public const int status_bar_notification_info_overflow = 2131623988;
+			
+			// aapt resource value: 0x7F0E0035
+			public const int title_error = 2131623989;
+			
+			// aapt resource value: 0x7F0E0036
+			public const int title_warning = 2131623990;
 			
 			static String()
 			{
