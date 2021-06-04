@@ -107,7 +107,12 @@ namespace Core.Presenters
             LoadItemsCommand.Execute(null);
         }
 
-        public async Task ImportData()
+        public void ActionDeleteAllData()
+        {
+            view.ShowDeleteAllDataWarningPopupMessage();
+        }
+
+        public async Task ActionImportDataFromExcel()
         {
             if (Items.Count() != 0)
             {
@@ -115,14 +120,16 @@ namespace Core.Presenters
             }
             await ImportDataFromExcel();
             LoadItemsCommand.Execute(null);
-            view.ReloadActivity();
+            view.NotifyListViewDataChanged();
         }
 
         public async Task DeleteAllData()
         {
             await cityService.DeleteAllAsync();
             LoadItemsCommand.Execute(null);
-            view.ReloadActivity();
+            view.NotifyListViewDataChanged();
+
+            Clear();
         }
 
         #endregion

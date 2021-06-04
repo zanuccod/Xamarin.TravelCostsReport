@@ -7,5 +7,6 @@
         void GetExternalPermissions();
         string GetFilePath(string fileName);
         void ReloadActivity();
+        void NotifyListViewDataChanged();
     }
 }

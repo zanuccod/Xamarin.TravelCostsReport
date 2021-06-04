@@ -17,6 +17,8 @@ using System.IO;
 using Xamarin.Essentials;
 using Android;
 using Android.Content.PM;
+using AndroidX.Core.Widget;
+using System.Threading.Tasks;
 
 namespace TravelingCostsReport.Droid.Activities
 {
@@ -27,6 +29,7 @@ namespace TravelingCostsReport.Droid.Activities
         private TravelDetailsItemAdapter adapterItem;
 
         private ItemTouchHelper mItemTouchHelper;
+        private RecyclerView recyclerView;
 
         #region Overridden Methods
 
@@ -41,10 +44,11 @@ namespace TravelingCostsReport.Droid.Activities
             var toolbar = FindViewById<Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            var recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
+            recyclerView = FindViewById<RecyclerView>(Resource.Id.recyclerView);
 
             recyclerView.HasFixedSize = true;
             recyclerView.SetAdapter(adapterItem = new TravelDetailsItemAdapter(presenter));
+
 
             var simpleCallback = new Helpers.ItemTouchHelper(
                 0,
@@ -87,13 +91,15 @@ namespace TravelingCostsReport.Droid.Activities
             {
                 case Resource.Id.action_import_excel_data:
                     presenter
-                        .ImportData()
-                        .GetAwaiter()
-                        .GetResult();
+                        .ActionImportDataFromExcel()
+                        .ConfigureAwait(false);
                     return true;
+
                 case Resource.Id.action_delete_all_data:
-                    ShowDeleteAllDataWarningPopupMessage();
+                    presenter
+                        .ActionDeleteAllData();
                     return true;
+
                 default:
                     return base.OnOptionsItemSelected(item);
             }
@@ -123,9 +129,8 @@ namespace TravelingCostsReport.Droid.Activities
 
         public void ReloadActivity()
         {
-            var intent = Intent;
             Finish();
-            StartActivity(intent);
+            StartActivity(Intent);
         }
 
         public void ShowShortToastMessage(string message)
@@ -168,18 +173,21 @@ namespace TravelingCostsReport.Droid.Activities
                 .SetMessage(Resource.String.main_activity_warning_message_delete_all_data)
                 .SetPositiveButton(
                     Resource.String.button_ok,
-                    (c, ev) =>
-                        {
-                            presenter
-                                .DeleteAllData()
-                                .ConfigureAwait(false)
-                                .GetAwaiter()
-                                .GetResult();
-                        })
+                        async (c, ev) =>
+                            {
+                                await presenter
+                                    .DeleteAllData()
+                                    .ConfigureAwait(false);
+                            })
                 .SetNegativeButton(Resource.String.button_cancel, (c, ev) => { })
                 .Create();
 
             popup.Show();
+        }
+
+        public void NotifyListViewDataChanged()
+        {
+            RunOnUiThread(recyclerView.GetAdapter().NotifyDataSetChanged);
         }
 
         #endregion
