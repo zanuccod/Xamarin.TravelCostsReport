@@ -91,8 +91,7 @@ namespace TravelingCostsReport.Droid.Activities
             {
                 case Resource.Id.action_import_excel_data:
                     presenter
-                        .ActionImportDataFromExcel()
-                        .ConfigureAwait(false);
+                        .ActionImportDataFromExcel();
                     return true;
 
                 case Resource.Id.action_delete_all_data:
@@ -164,6 +163,25 @@ namespace TravelingCostsReport.Droid.Activities
                 Android.OS.Environment.ExternalStorageDirectory.Path,
                 Android.OS.Environment.DirectoryDownloads,
                 fileName);
+        }
+
+        public void ShowImportDataFromExcelPopUp()
+        {
+            var popup = new AndroidX.AppCompat.App.AlertDialog.Builder(this)
+                .SetTitle(Resource.String.title_warning)
+                .SetMessage($"Importare i dati dal file <{GetFilePath(TravelDetailViewPresenter.FILE_NAME)}>?")
+                .SetPositiveButton(
+                    Resource.String.button_ok,
+                        async (c, ev) =>
+                        {
+                            await presenter
+                                .ImportData()
+                                .ConfigureAwait(false);
+                        })
+                .SetNegativeButton(Resource.String.button_cancel, (c, ev) => { })
+                .Create();
+
+            popup.Show();
         }
 
         public void ShowDeleteAllDataWarningPopupMessage()

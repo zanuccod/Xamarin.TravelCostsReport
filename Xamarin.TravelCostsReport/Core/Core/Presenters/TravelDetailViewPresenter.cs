@@ -21,6 +21,7 @@ namespace Core.Presenters
         private readonly ITravelDetailView view;
 
         public const int START_TRAVEL_STEP_INDEX = 1;
+        public const string FILE_NAME = "travelData.ods";
 
         #endregion
 
@@ -112,15 +113,9 @@ namespace Core.Presenters
             view.ShowDeleteAllDataWarningPopupMessage();
         }
 
-        public async Task ActionImportDataFromExcel()
+        public void ActionImportDataFromExcel()
         {
-            if (Items.Count() != 0)
-            {
-                await cityService.DeleteAllAsync();
-            }
-            await ImportDataFromExcel();
-            LoadItemsCommand.Execute(null);
-            view.NotifyListViewDataChanged();
+            view.ShowImportDataFromExcelPopUp();
         }
 
         public async Task DeleteAllData()
@@ -130,6 +125,17 @@ namespace Core.Presenters
             view.NotifyListViewDataChanged();
 
             Clear();
+        }
+
+        public async Task ImportData()
+        {
+            if (Items.Count() != 0)
+            {
+                await cityService.DeleteAllAsync();
+            }
+            await ImportDataFromExcel();
+            LoadItemsCommand.Execute(null);
+            view.NotifyListViewDataChanged();
         }
 
         #endregion
@@ -169,28 +175,26 @@ namespace Core.Presenters
             }
         }
 
-        private Task ImportDataFromExcel()
+        private async Task ImportDataFromExcel()
         {
-            var items = ReadDataFromExcel();
+            var items = await ReadDataFromExcel();
             if (items.Any())
             {
-                cityService.InsertItemsAsync(items);
+                await cityService.InsertItemsAsync(items);
             }
             else
             {
                 view.ShowShortToastMessage("No data to be loaded");
             }
-            return Task.CompletedTask;
         }
 
-        private IEnumerable<CityDto> ReadDataFromExcel()
+        private async Task<IEnumerable<CityDto>> ReadDataFromExcel()
         {
-            var fileName = "travelData.ods";
-            var path = view.GetFilePath(fileName);
+            var path = view.GetFilePath(FILE_NAME);
 
             if (File.Exists(path))
             {
-                return ExcelHelper.ReadExcel(path);
+                return await Task.FromResult(ExcelHelper.ReadExcel(path));
             }
             else
             {
