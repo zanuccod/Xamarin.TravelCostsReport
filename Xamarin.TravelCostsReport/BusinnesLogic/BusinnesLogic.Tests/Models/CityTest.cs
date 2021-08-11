@@ -33,6 +33,34 @@ namespace BusinnesLogic.Tests.Models
         }
 
         [Fact]
+        public void EqualsToObjectWithSameValues_ShouldReturnTrue()
+        {
+            // Arrange
+            var cityItem = new CityItem();
+            var city = new City
+            {
+                CityItems = new List<CityItem>()
+                {
+                    cityItem
+                }
+            };
+
+            var city1 = new City
+            {
+                CityItems = new List<CityItem>()
+                {
+                    cityItem
+                }
+            };
+
+            // Act
+            var result = city.Equals((object)city1);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
         public void EqualsToUserWithSameProperties_ShouldReturnTrue()
         {
             // Arrange

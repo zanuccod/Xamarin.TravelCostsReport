@@ -8,14 +8,29 @@ namespace BusinnesLogic.Models
         public string Name { get; set; }
         public int Distance { get; set; }
 
+        #region Constructor
+
+        public CityItem()
+        {
+            Name = string.Empty;
+        }
+
+        #endregion
+
         #region Overridden Methods
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !ReferenceEquals(obj, this))
+            if (obj == null || !(obj is CityItem))
             {
                 return false;
             }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             return Equals(obj as CityItem);
         }
 

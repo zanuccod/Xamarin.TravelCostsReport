@@ -16,6 +16,7 @@ namespace BusinnesLogic.Models
 
         public City()
         {
+            Name = string.Empty;
             CityItems = Enumerable.Empty<CityItem>();
         }
 
@@ -25,10 +26,16 @@ namespace BusinnesLogic.Models
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !ReferenceEquals(obj, this))
+            if (obj == null || !(obj is City))
             {
                 return false;
             }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             return Equals(obj as City);
         }
 
